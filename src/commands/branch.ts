@@ -12,10 +12,13 @@ async function generateBranchName(
     description: string,
     model: MergedConfig["model"],
     config: MergedConfig,
+    quiet = false,
 ): Promise<string> {
     const prompt = buildBranchPrompt({ description });
 
-    console.error(`Generating with ${colors.cyan(model)}...`);
+    if (!quiet) {
+        console.error(`Generating with ${colors.cyan(model)}...`);
+    }
     const name = await generate(prompt, model, config.provider);
     return name.replace(/^["']|["']$/g, "").replace(/[\n\r]/g, "");
 }
@@ -34,7 +37,7 @@ export const branchCommand = new Command()
     .arguments("[description...:string]")
     .option("-s, --smart", "Use AI to generate branch name")
     .option("-y, --yes", "Auto-create branch (with -s only)")
-    .option("-r, --raw", "Print raw name to stdout (implies -s, no branch creation)")
+    .option("-r, --raw", "Print raw name to stdout, no branch creation (requires -sy)")
     .action(async (options, ...descriptionParts) => {
         if (!await isGitRepo()) {
             console.error(colors.red("Error: Not in a git repository"));
@@ -50,12 +53,14 @@ export const branchCommand = new Command()
         }
 
         if (options.raw) {
-            if (!description) {
-                console.error(colors.red("Error: No description provided"));
+            if (!options.smart || !options.yes) {
+                console.error(
+                    colors.red("Error: --raw must be used with --smart and --yes (-syr)"),
+                );
                 Deno.exit(1);
             }
             const config = await loadConfig();
-            const name = await generateBranchName(description, config.model, config);
+            const name = await generateBranchName(description, config.model, config, true);
             console.log(name);
             return;
         }

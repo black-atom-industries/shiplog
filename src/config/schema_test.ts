@@ -4,11 +4,11 @@ import { GlobalConfigSchema, MergedConfigSchema, RepoConfigSchema } from "./sche
 Deno.test("GlobalConfigSchema - parses empty object with defaults", () => {
     const result = GlobalConfigSchema.parse({});
     assertEquals(result.provider, "anthropic");
-    assertEquals(result.model, "claude-haiku-4-5");
+    assertEquals(result.model, "anthropic/claude-haiku-4-6");
     assertEquals(result.models, [
         "claude-opus-4-5",
         "claude-sonnet-4-5",
-        "claude-haiku-4-5",
+        "claude-haiku-4-6",
     ]);
     assertEquals(result.summaryLength, 72);
     assertEquals(result.historyCount, 10);
@@ -28,12 +28,31 @@ Deno.test("GlobalConfigSchema - rejects invalid provider", () => {
     assertThrows(() => GlobalConfigSchema.parse({ provider: "openai" }));
 });
 
-Deno.test("GlobalConfigSchema - rejects invalid model", () => {
-    assertThrows(() => GlobalConfigSchema.parse({ model: "gpt-4" }));
+Deno.test("GlobalConfigSchema - accepts any string as model (openrouter compatibility)", () => {
+    // OpenRouter uses dynamic provider/model-name strings, so model accepts any string
+    const result = GlobalConfigSchema.parse({ model: "openai/gpt-5" });
+    assertEquals(result.model, "openai/gpt-5");
+
+    const result2 = GlobalConfigSchema.parse({ model: "x-ai/grok-4-fast" });
+    assertEquals(result2.model, "x-ai/grok-4-fast");
+
+    const result3 = GlobalConfigSchema.parse({ model: "openrouter/auto" });
+    assertEquals(result3.model, "openrouter/auto");
 });
 
-Deno.test("GlobalConfigSchema - rejects invalid model in models array", () => {
-    assertThrows(() => GlobalConfigSchema.parse({ models: ["claude-haiku-4-5", "invalid-model"] }));
+Deno.test("GlobalConfigSchema - accepts any strings in models array (openrouter compatibility)", () => {
+    const result = GlobalConfigSchema.parse({
+        models: [
+            "anthropic/claude-sonnet-4.5",
+            "openai/gpt-5",
+            "nvidia/nemotron-3-super:free",
+        ],
+    });
+    assertEquals(result.models, [
+        "anthropic/claude-sonnet-4.5",
+        "openai/gpt-5",
+        "nvidia/nemotron-3-super:free",
+    ]);
 });
 
 Deno.test("GlobalConfigSchema - rejects non-positive summaryLength", () => {

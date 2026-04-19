@@ -1,13 +1,13 @@
 import { z } from "zod";
-import { ANTHROPIC_MODELS, PROVIDER_NAMES } from "../adapters.ts";
+import { PROVIDER_NAMES } from "../adapters.ts";
 
 export const GlobalConfigSchema = z.object({
-    provider: z.enum(PROVIDER_NAMES).default("anthropic"),
-    model: z.enum(ANTHROPIC_MODELS).default("claude-haiku-4-5"),
-    models: z.array(z.enum(ANTHROPIC_MODELS)).default([
+    provider: z.enum(PROVIDER_NAMES as unknown as ["anthropic", "openrouter"]).default("anthropic"),
+    model: z.string().default("anthropic/claude-haiku-4-6"),
+    models: z.array(z.string()).default([
         "claude-opus-4-5",
         "claude-sonnet-4-5",
-        "claude-haiku-4-5",
+        "claude-haiku-4-6",
     ]),
     summaryLength: z.number().positive().default(72),
     historyCount: z.number().positive().default(10),

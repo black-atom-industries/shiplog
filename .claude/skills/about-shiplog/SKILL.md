@@ -9,7 +9,7 @@ user-invocable: false
 ## What It Is
 
 Shiplog is an AI-powered git CLI tool built with Deno 2.x and TypeScript. It generates commit
-messages and branch names via LLM providers (currently Anthropic).
+messages and branch names via LLM providers (Anthropic, OpenRouter).
 
 ## Origin
 
@@ -38,7 +38,7 @@ src/
   main.ts           → Entry point, Cliffy command registration
   commands/          → commit.ts, branch.ts — CLI command definitions
   ai/                → client.ts (LLM interaction), prompts.ts (prompt templates)
-  providers/         → index.ts (registry), anthropic.ts (TanStack AI adapter)
+  adapters.ts        → Provider factory (Anthropic, OpenRouter), model type definitions
   config/            → schema.ts (Zod), loader.ts (TOML)
   git/               → diff.ts, exec.ts, operations.ts
   ui/                → prompts.ts (interactive user prompts via Cliffy)

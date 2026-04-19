@@ -46,6 +46,7 @@ async function ensureStagedChanges(useLazygit: boolean): Promise<void> {
 async function generateCommitMessage(
     model: MergedConfig["model"],
     config: MergedConfig,
+    quiet = false,
 ): Promise<string> {
     const [diff, branch, history] = await Promise.all([
         getStagedDiff(),
@@ -62,7 +63,9 @@ async function generateCommitMessage(
         issueId,
     });
 
-    console.error(`Generating with ${colors.cyan(model)}...`);
+    if (!quiet) {
+        console.error(`Generating with ${colors.cyan(model)}...`);
+    }
     const message = await generate(prompt, model, config.provider);
     return message.replace(/^["']|["']$/g, "").replace(/\r/g, "");
 }
@@ -112,6 +115,7 @@ export const commitCommand = new Command()
     .description("Commit changes (manual or AI-powered)")
     .option("-s, --smart", "Use AI to generate commit message")
     .option("-y, --yes", "Auto-confirm (with -s only)")
+    .option("-r, --raw", "Print raw message to stdout, no commit (requires -sy)")
     .option("-p, --push", "Push after commit")
     .option("-f, --force", "Force push with --force-with-lease")
     .action(async (options) => {
@@ -122,6 +126,19 @@ export const commitCommand = new Command()
 
         const config = await loadConfig();
 
+        if (options.raw) {
+            if (!options.smart || !options.yes) {
+                console.error(
+                    colors.red("Error: --raw must be used with --smart and --yes (-syr)"),
+                );
+                Deno.exit(1);
+            }
+            await ensureStagedChanges(config.useLazygit);
+            const message = await generateCommitMessage(config.model, config, true);
+            console.log(message);
+            return;
+        }
+
         if (!options.smart) {
             await ensureStagedChanges(config.useLazygit);
             await runGuidedCommit(config);
@@ -131,7 +148,13 @@ export const commitCommand = new Command()
 
         let currentModel = config.model;
         await ensureStagedChanges(config.useLazygit);
-        let commitMessage = await generateCommitMessage(currentModel, config);
+        let commitMessage: string;
+        try {
+            commitMessage = await generateCommitMessage(currentModel, config);
+        } catch (error) {
+            console.error(colors.red(`Failed to generate commit message: ${error}`));
+            Deno.exit(1);
+        }
         displayMessage(commitMessage, currentModel);
 
         if (options.yes) {

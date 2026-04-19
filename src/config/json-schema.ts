@@ -19,5 +19,9 @@ function convertKeysToSnakeCase(schema: Record<string, unknown>): Record<string,
 export function generateJsonSchema(): string {
     const schema = z.toJSONSchema(MergedConfigSchema);
     const converted = convertKeysToSnakeCase(schema as Record<string, unknown>);
+
+    // Remove the required array — all fields have defaults, so the config is fully optional
+    delete converted.required;
+
     return JSON.stringify(converted, null, 2);
 }

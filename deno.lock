@@ -21,6 +21,8 @@
     "jsr:@std/text@^1.0.17": "1.0.17",
     "jsr:@std/toml@^1.0.11": "1.0.11",
     "npm:@tanstack/ai-anthropic@0.6": "0.6.0_@tanstack+ai@0.6.3_zod@4.3.6",
+    "npm:@tanstack/ai-openrouter@*": "0.7.5_@tanstack+ai@0.6.3",
+    "npm:@tanstack/ai-openrouter@~0.7.4": "0.7.5_@tanstack+ai@0.6.3",
     "npm:@tanstack/ai@~0.6.3": "0.6.3",
     "npm:zod-to-json-schema@*": "3.25.1_zod@4.3.6",
     "npm:zod@^4.3.6": "4.3.6"
@@ -132,12 +134,26 @@
     "@babel/runtime@7.28.6": {
       "integrity": "sha512-05WQkdpL9COIMz4LjTxGpPNCdlpyimKppYNoJ5Di5EUObifl8t4tuLuUBBZEpoLYOmfvIWrsp9fCl0HoPRVTdA=="
     },
+    "@openrouter/sdk@0.12.14": {
+      "integrity": "sha512-G32CZ1IkmtsGfQF7/mzcvt7W0Lmd6HUHFGjDWv5knBvL6sJcMmX6i3VPSIpHQYSgEqRQSxFuDROP6iErTu7XcA==",
+      "dependencies": [
+        "zod"
+      ],
+      "scripts": true
+    },
     "@tanstack/ai-anthropic@0.6.0_@tanstack+ai@0.6.3_zod@4.3.6": {
       "integrity": "sha512-xVKq6Co58etETfxrCfLzESyxrmR28D9+sh6FH/mPTeHWnOt3Tyb12OqOD5Gu2Ox4nZKWviHbmLKxavR4iFSYag==",
       "dependencies": [
         "@anthropic-ai/sdk",
         "@tanstack/ai",
         "zod"
+      ]
+    },
+    "@tanstack/ai-openrouter@0.7.5_@tanstack+ai@0.6.3": {
+      "integrity": "sha512-xmhjyLTjiAmO+iWJOK7hfJrwYXJgSmZs8RTMeoia6IWgoVSfX2aNIb1sT2RcwSTtAcn7i10e9jjXHrG/gZ702g==",
+      "dependencies": [
+        "@openrouter/sdk",
+        "@tanstack/ai"
       ]
     },
     "@tanstack/ai@0.6.3": {
@@ -181,6 +197,7 @@
       "jsr:@std/fmt@1.0.9",
       "jsr:@std/toml@^1.0.11",
       "npm:@tanstack/ai-anthropic@0.6",
+      "npm:@tanstack/ai-openrouter@~0.7.4",
       "npm:@tanstack/ai@~0.6.3",
       "npm:zod@^4.3.6"
     ]

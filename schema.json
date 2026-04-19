@@ -6,46 +6,23 @@
             "default": "anthropic",
             "type": "string",
             "enum": [
-                "anthropic"
+                "anthropic",
+                "openrouter"
             ]
         },
         "model": {
-            "default": "claude-haiku-4-5",
-            "type": "string",
-            "enum": [
-                "claude-opus-4-6",
-                "claude-opus-4-5",
-                "claude-sonnet-4-5",
-                "claude-haiku-4-5",
-                "claude-opus-4-1",
-                "claude-sonnet-4",
-                "claude-3-7-sonnet",
-                "claude-opus-4",
-                "claude-3-5-haiku",
-                "claude-3-haiku"
-            ]
+            "default": "anthropic/claude-haiku-4-6",
+            "type": "string"
         },
         "models": {
             "default": [
                 "claude-opus-4-5",
                 "claude-sonnet-4-5",
-                "claude-haiku-4-5"
+                "claude-haiku-4-6"
             ],
             "type": "array",
             "items": {
-                "type": "string",
-                "enum": [
-                    "claude-opus-4-6",
-                    "claude-opus-4-5",
-                    "claude-sonnet-4-5",
-                    "claude-haiku-4-5",
-                    "claude-opus-4-1",
-                    "claude-sonnet-4",
-                    "claude-3-7-sonnet",
-                    "claude-opus-4",
-                    "claude-3-5-haiku",
-                    "claude-3-haiku"
-                ]
+                "type": "string"
             }
         },
         "summary_length": {
@@ -103,15 +80,5 @@
             }
         }
     },
-    "required": [
-        "provider",
-        "model",
-        "models",
-        "summaryLength",
-        "historyCount",
-        "useLazygit",
-        "commitTypes",
-        "scopes"
-    ],
     "additionalProperties": false
 }

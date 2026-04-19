@@ -15,6 +15,9 @@ export async function generate(
 
     let text = "";
     for await (const chunk of stream) {
+        if (chunk.type === "RUN_ERROR") {
+            throw new Error(chunk.error.message);
+        }
         if (chunk.type === "TEXT_MESSAGE_CONTENT") {
             text += chunk.delta;
         }

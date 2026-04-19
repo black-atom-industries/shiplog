@@ -1,8 +1,17 @@
 import { assertEquals, assertThrows } from "jsr:@std/assert";
-import { ANTHROPIC_MODELS, createAdapter, PROVIDER_NAMES } from "./adapters.ts";
+import {
+    ANTHROPIC_MODELS,
+    createAdapter,
+    OPENROUTER_DEFAULT_MODELS,
+    PROVIDER_NAMES,
+} from "./adapters.ts";
 
-Deno.test("PROVIDER_NAMES contains anthropic", () => {
-    assertEquals(PROVIDER_NAMES, ["anthropic"]);
+Deno.test("PROVIDER_NAMES includes anthropic", () => {
+    assertEquals(PROVIDER_NAMES.includes("anthropic"), true);
+});
+
+Deno.test("PROVIDER_NAMES includes openrouter", () => {
+    assertEquals(PROVIDER_NAMES.includes("openrouter"), true);
 });
 
 Deno.test("ANTHROPIC_MODELS is a non-empty array of strings", () => {
@@ -13,8 +22,22 @@ Deno.test("ANTHROPIC_MODELS is a non-empty array of strings", () => {
     }
 });
 
-Deno.test("createAdapter returns an adapter for valid provider/model", () => {
+Deno.test("OPENROUTER_DEFAULT_MODELS is a non-empty array of strings", () => {
+    assertEquals(Array.isArray(OPENROUTER_DEFAULT_MODELS), true);
+    assertEquals(OPENROUTER_DEFAULT_MODELS.length > 0, true);
+    for (const model of OPENROUTER_DEFAULT_MODELS) {
+        assertEquals(typeof model, "string");
+    }
+});
+
+Deno.test("createAdapter returns an adapter for anthropic provider/model", () => {
     const adapter = createAdapter("anthropic", "claude-haiku-4-5");
+    assertEquals(typeof adapter, "object");
+    assertEquals(adapter !== null, true);
+});
+
+Deno.test("createAdapter returns an adapter for openrouter provider/model", () => {
+    const adapter = createAdapter("openrouter", "openrouter/auto");
     assertEquals(typeof adapter, "object");
     assertEquals(adapter !== null, true);
 });

@@ -4,7 +4,10 @@ AI-powered git CLI — generates commit messages and branch names via LLM.
 
 ## Install
 
-Requires [Deno 2.x](https://deno.com/) and an `ANTHROPIC_API_KEY` environment variable.
+Requires [Deno 2.x](https://deno.com/) and an API key for your chosen LLM provider:
+
+- Anthropic: `ANTHROPIC_API_KEY`
+- OpenRouter: `OPENROUTER_API_KEY`
 
 ```sh
 git clone https://github.com/black-atom-industries/shiplog.git
@@ -39,16 +42,19 @@ suggestion for you to review, edit, or regenerate before applying.
 
 Currently supported providers:
 
-| Provider    | Models                                                     |
-| ----------- | ---------------------------------------------------------- |
-| `anthropic` | `claude-opus-4-5`, `claude-sonnet-4-5`, `claude-haiku-4-5` |
+| Provider     | Models                                                                |
+| ------------ | --------------------------------------------------------------------- |
+| `anthropic`  | `claude-opus-4-6`, `claude-sonnet-4-5`, `claude-haiku-4-6`            |
+| `openrouter` | `openrouter/auto`, `nvidia/nemotron-3-super:free`, `x-ai/grok-4-fast` |
 
-The default model is `claude-haiku-4-5` (fast and cheap). You can switch models interactively during
-a `--smart` session, or set a different default in your config.
+The default model is `claude-haiku-4-6` (fast and cheap). OpenRouter users get free model options
+and auto-routing by default. You can switch models interactively during a `--smart` session, or set
+a different default in your config.
 
 Requires the provider's API key as an environment variable:
 
 - Anthropic: `ANTHROPIC_API_KEY`
+- OpenRouter: `OPENROUTER_API_KEY`
 
 ## Usage
 
@@ -69,6 +75,12 @@ shiplog commit --smart --yes --push
 
 # Force push (--force-with-lease)
 shiplog commit --smart --yes --push --force
+
+# Raw output — just print the message, no commit (requires -sy)
+shiplog commit -syr
+
+# Use with git directly (e.g. from Neovim :! or scripts)
+git commit -m "$(shiplog commit -syr)"
 ```
 
 ### Branch
@@ -82,6 +94,9 @@ shiplog branch --smart "fix the login validation bug"
 
 # Auto-confirm
 shiplog branch --smart --yes "add user dashboard"
+
+# Raw output — just print the name, no branch creation (requires -sy)
+git checkout -b "$(shiplog branch -syr "add user dashboard")"
 ```
 
 ### Config
@@ -97,11 +112,24 @@ shiplog config --show
 
 ```toml
 provider = "anthropic"
-model = "claude-haiku-4-5"
-models = ["claude-opus-4-5", "claude-sonnet-4-5", "claude-haiku-4-5"]
+model = "claude-haiku-4-6"
+models = ["claude-opus-4-6", "claude-sonnet-4-5", "claude-haiku-4-6"]
 summary_length = 72
 history_count = 10
 ```
+
+Or with OpenRouter:
+
+```toml
+provider = "openrouter"
+model = "openrouter/auto"
+models = ["openrouter/auto", "nvidia/nemotron-3-super:free", "x-ai/grok-4-fast"]
+summary_length = 72
+history_count = 10
+```
+
+OpenRouter gives you automatic access to 300+ models through a single API key. The `openrouter/auto`
+model picks the best available model for your request, potentially using free models when possible.
 
 ### Repo-local (`.shiplog.toml`)
 
@@ -128,6 +156,7 @@ deno task fmt      # Format
 ## Stack
 
 - [Deno 2.x](https://deno.com/) — runtime
-- [TanStack AI](https://tanstack.com/ai) + `@tanstack/ai-anthropic` — LLM abstraction
+- [TanStack AI](https://tanstack.com/ai) (`@tanstack/ai-anthropic`, `@tanstack/ai-openrouter`) — LLM
+  abstraction
 - [Zod v4](https://zod.dev/) — config schema validation
 - [Cliffy](https://cliffy.io/) — CLI framework and interactive prompts

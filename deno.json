@@ -20,6 +20,7 @@
         "@std/fmt/colors": "jsr:@std/fmt@1.0.9/colors",
         "@tanstack/ai": "npm:@tanstack/ai@^0.6.3",
         "@tanstack/ai-anthropic": "npm:@tanstack/ai-anthropic@^0.6.0",
+        "@tanstack/ai-openrouter": "npm:@tanstack/ai-openrouter@^0.7.4",
         "zod": "npm:zod@^4.3.6"
     },
     "fmt": {
