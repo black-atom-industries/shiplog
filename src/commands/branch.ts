@@ -20,7 +20,11 @@ async function generateBranchName(
         console.error(`Generating with ${colors.cyan(model)}...`);
     }
     const name = await generate(prompt, model, config.provider);
-    return name.replace(/^["']|["']$/g, "").replace(/[\n\r]/g, "");
+    return name
+        .replace(/^```[\s\n]*|[\s\n]*```$/gm, "")
+        .replace(/^`|`$/gm, "")
+        .replace(/^["']|["']$/g, "")
+        .replace(/[\n\r]/g, "");
 }
 
 function displayBranchName(name: string, model: string): void {

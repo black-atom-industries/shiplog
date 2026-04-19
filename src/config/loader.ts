@@ -5,7 +5,7 @@ import {
     MergedConfigSchema,
     RepoConfigSchema,
 } from "./schema.ts";
-import { GLOBAL_CONFIG_PATH, REPO_CONFIG_NAME } from "./paths.ts";
+import { getGlobalConfigPath, REPO_CONFIG_NAME } from "./paths.ts";
 
 /** Convert snake_case keys to camelCase (single level, no recursion needed for flat config) */
 function snakeToCamel(obj: Record<string, unknown>): Record<string, unknown> {
@@ -29,7 +29,7 @@ async function readTomlFile(path: string): Promise<Record<string, unknown> | nul
 }
 
 export async function loadConfig(): Promise<MergedConfig> {
-    const globalRaw = await readTomlFile(GLOBAL_CONFIG_PATH);
+    const globalRaw = await readTomlFile(getGlobalConfigPath());
     const globalConfig = GlobalConfigSchema.parse(globalRaw ?? {});
 
     const repoRaw = await readTomlFile(REPO_CONFIG_NAME);

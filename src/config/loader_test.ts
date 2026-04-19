@@ -39,15 +39,21 @@ Deno.test("loadConfig - returns defaults when no config files exist", async () =
     const dir = await Deno.makeTempDir();
     const origCwd = Deno.cwd();
     Deno.chdir(dir);
+    
+    // Override HOME so we don't read the user's actual config
+    const origHome = Deno.env.get("HOME");
+    Deno.env.set("HOME", dir);
+    
     try {
         const config = await loadConfig();
         assertEquals(config.provider, "anthropic");
-        assertEquals(config.model, "claude-haiku-4-5");
+        assertEquals(config.model, "anthropic/claude-haiku-4-6");
         assertEquals(config.summaryLength, 72);
         assertEquals(config.historyCount, 10);
         assertEquals(config.issuePattern, undefined);
         assertEquals(config.issuePrefix, undefined);
     } finally {
+        Deno.env.set("HOME", origHome ?? "");
         Deno.chdir(origCwd);
         await Deno.remove(dir, { recursive: true });
     }
@@ -57,9 +63,16 @@ Deno.test("loadConfig - repo config merges over global config", async () => {
     await withTempFiles(
         { ".shiplog.toml": { issuePattern: "(PROJ-\\d+)", issuePrefix: "" } },
         async () => {
-            const config = await loadConfig();
-            assertEquals(config.issuePattern, "(PROJ-\\d+)");
-            assertEquals(config.provider, "anthropic"); // global default preserved
+            // Override HOME so we don't read the user's actual config
+            const origHome = Deno.env.get("HOME");
+            Deno.env.set("HOME", Deno.cwd());
+            try {
+                const config = await loadConfig();
+                assertEquals(config.issuePattern, "(PROJ-\\d+)");
+                assertEquals(config.provider, "anthropic"); // global default preserved
+            } finally {
+                Deno.env.set("HOME", origHome ?? "");
+            }
         },
     );
 });

@@ -67,7 +67,11 @@ async function generateCommitMessage(
         console.error(`Generating with ${colors.cyan(model)}...`);
     }
     const message = await generate(prompt, model, config.provider);
-    return message.replace(/^["']|["']$/g, "").replace(/\r/g, "");
+    return message
+        .replace(/^```[\s\n]*|[\s\n]*```$/gm, "")
+        .replace(/^`|`$/gm, "")
+        .replace(/^["']|["']$/g, "")
+        .replace(/\r/g, "");
 }
 
 function displayMessage(message: string, model: string): void {
