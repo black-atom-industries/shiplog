@@ -39,11 +39,11 @@ Deno.test("loadConfig - returns defaults when no config files exist", async () =
     const dir = await Deno.makeTempDir();
     const origCwd = Deno.cwd();
     Deno.chdir(dir);
-    
+
     // Override HOME so we don't read the user's actual config
     const origHome = Deno.env.get("HOME");
     Deno.env.set("HOME", dir);
-    
+
     try {
         const config = await loadConfig();
         assertEquals(config.provider, "anthropic");

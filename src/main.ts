@@ -4,10 +4,11 @@ import { commitCommand } from "./commands/commit.ts";
 import { branchCommand } from "./commands/branch.ts";
 import { configCommand } from "./commands/config.ts";
 import { initCommand } from "./commands/init.ts";
+import denoJson from "../deno.json" with { type: "json" };
 
 const main = new Command()
     .name("shiplog")
-    .version("0.1.0")
+    .version(denoJson.version)
     .description("AI-powered git operations")
     .action(function () {
         this.showHelp();
