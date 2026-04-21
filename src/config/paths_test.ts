@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 import { CONFIG_DIR, GLOBAL_CONFIG_PATH, REMOTE_SCHEMA_URL, REPO_CONFIG_NAME } from "./paths.ts";
 
 Deno.test("CONFIG_DIR points to ~/.config/black-atom/shiplog", () => {

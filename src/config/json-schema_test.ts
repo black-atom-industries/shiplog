@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 import { generateJsonSchema } from "./json-schema.ts";
 
 Deno.test("generateJsonSchema - returns valid JSON", () => {

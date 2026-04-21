@@ -1,4 +1,4 @@
-import { assertEquals, assertThrows } from "jsr:@std/assert";
+import { assertEquals, assertThrows } from "@std/assert";
 import { GlobalConfigSchema, MergedConfigSchema, RepoConfigSchema } from "./schema.ts";
 
 Deno.test("GlobalConfigSchema - parses empty object with defaults", () => {

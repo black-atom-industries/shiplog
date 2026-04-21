@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 import { buildCommitPrompt } from "./commit-prompt.ts";
 
 Deno.test("buildCommitPrompt - includes diff in output", () => {

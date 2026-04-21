@@ -62,6 +62,6 @@ export async function openInEditor(content: string): Promise<string | null> {
     }
 }
 
-export async function editMessage(message: string): Promise<string | null> {
+export function editMessage(message: string): Promise<string | null> {
     return openInEditor(message);
 }

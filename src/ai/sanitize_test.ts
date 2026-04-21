@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 import { sanitizeBranchName, sanitizeCommitMessage } from "./sanitize.ts";
 
 Deno.test("sanitizeCommitMessage - passes through clean input unchanged", () => {

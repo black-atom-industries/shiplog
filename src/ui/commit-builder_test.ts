@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 import { buildCommitMessage } from "./commit-builder.ts";
 
 Deno.test("buildCommitMessage - type and subject only", () => {
