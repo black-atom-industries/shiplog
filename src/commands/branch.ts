@@ -6,6 +6,7 @@ import { switchToNewBranch } from "../git/operations.ts";
 import { isGitRepo } from "../git/diff.ts";
 import { generate } from "../ai/client.ts";
 import { buildBranchPrompt } from "../ai/branch-prompt.ts";
+import { sanitizeBranchName } from "../ai/sanitize.ts";
 import { selectBranchAction, selectModel } from "../ui/prompts.ts";
 
 async function generateBranchName(
@@ -20,11 +21,7 @@ async function generateBranchName(
         console.error(`Generating with ${colors.cyan(model)}...`);
     }
     const name = await generate(prompt, model, config.provider);
-    return name
-        .replace(/^```[\s\n]*|[\s\n]*```$/gm, "")
-        .replace(/^`|`$/gm, "")
-        .replace(/^["']|["']$/g, "")
-        .replace(/[\n\r]/g, "");
+    return sanitizeBranchName(name);
 }
 
 function displayBranchName(name: string, model: string): void {

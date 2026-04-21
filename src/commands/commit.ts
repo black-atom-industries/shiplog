@@ -6,6 +6,7 @@ import { getCommitHistory, getCurrentBranch, getStagedDiff, isGitRepo } from "..
 import { commit, forcePush, push } from "../git/operations.ts";
 import { generate } from "../ai/client.ts";
 import { buildCommitPrompt } from "../ai/commit-prompt.ts";
+import { sanitizeCommitMessage } from "../ai/sanitize.ts";
 import { confirmForcePush, editMessage, selectCommitAction, selectModel } from "../ui/prompts.ts";
 import { askUserToOpenLazygit } from "../ui/lazygit.ts";
 import { runGuidedCommit } from "../ui/commit-builder.ts";
@@ -67,11 +68,7 @@ async function generateCommitMessage(
         console.error(`Generating with ${colors.cyan(model)}...`);
     }
     const message = await generate(prompt, model, config.provider);
-    return message
-        .replace(/^```[\s\n]*|[\s\n]*```$/gm, "")
-        .replace(/^`|`$/gm, "")
-        .replace(/^["']|["']$/g, "")
-        .replace(/\r/g, "");
+    return sanitizeCommitMessage(message);
 }
 
 function displayMessage(message: string, model: string): void {
