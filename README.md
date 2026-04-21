@@ -42,10 +42,10 @@ suggestion for you to review, edit, or regenerate before applying.
 
 Currently supported providers:
 
-| Provider     | Models                                                                |
-| ------------ | --------------------------------------------------------------------- |
-| `anthropic`  | `claude-opus-4-6`, `claude-sonnet-4-5`, `claude-haiku-4-6`            |
-| `openrouter` | `openrouter/auto`, `nvidia/nemotron-3-super:free`, `x-ai/grok-4-fast` |
+| Provider     | Models                                                                         |
+| ------------ | ------------------------------------------------------------------------------ |
+| `anthropic`  | `claude-opus-4-6`, `claude-sonnet-4-5`, `claude-haiku-4-6`                     |
+| `openrouter` | `google/gemma-3-27b-it`, `google/gemma-3-12b-it`, `nvidia/nemotron-nano-9b-v2` |
 
 The default model is `claude-haiku-4-6` (fast and cheap). OpenRouter users get free model options
 and auto-routing by default. You can switch models interactively during a `--smart` session, or set
@@ -122,14 +122,15 @@ Or with OpenRouter:
 
 ```toml
 provider = "openrouter"
-model = "openrouter/auto"
-models = ["openrouter/auto", "nvidia/nemotron-3-super:free", "x-ai/grok-4-fast"]
+model = "google/gemma-3-27b-it"
+models = ["google/gemma-3-27b-it", "google/gemma-3-12b-it", "nvidia/nemotron-nano-9b-v2"]
 summary_length = 72
 history_count = 10
 ```
 
-OpenRouter gives you automatic access to 300+ models through a single API key. The `openrouter/auto`
-model picks the best available model for your request, potentially using free models when possible.
+OpenRouter gives you access to 300+ models through a single API key. The defaults above are cheap,
+fast, non-reasoning models well-suited to short commit-message generation. Swap in any other model
+ID from [openrouter.ai/models](https://openrouter.ai/models).
 
 ### Repo-local (`.shiplog.toml`)
 

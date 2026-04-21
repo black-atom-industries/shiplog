@@ -36,8 +36,8 @@ Deno.test("GlobalConfigSchema - accepts any string as model (openrouter compatib
     const result2 = GlobalConfigSchema.parse({ model: "x-ai/grok-4-fast" });
     assertEquals(result2.model, "x-ai/grok-4-fast");
 
-    const result3 = GlobalConfigSchema.parse({ model: "openrouter/auto" });
-    assertEquals(result3.model, "openrouter/auto");
+    const result3 = GlobalConfigSchema.parse({ model: "google/gemma-3-27b-it" });
+    assertEquals(result3.model, "google/gemma-3-27b-it");
 });
 
 Deno.test("GlobalConfigSchema - accepts any strings in models array (openrouter compatibility)", () => {
@@ -45,13 +45,13 @@ Deno.test("GlobalConfigSchema - accepts any strings in models array (openrouter 
         models: [
             "anthropic/claude-sonnet-4.5",
             "openai/gpt-5",
-            "nvidia/nemotron-3-super:free",
+            "google/gemma-3-12b-it",
         ],
     });
     assertEquals(result.models, [
         "anthropic/claude-sonnet-4.5",
         "openai/gpt-5",
-        "nvidia/nemotron-3-super:free",
+        "google/gemma-3-12b-it",
     ]);
 });
 

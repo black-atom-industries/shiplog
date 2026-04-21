@@ -12,10 +12,9 @@ export type ProviderName = (typeof PROVIDER_NAMES)[number];
 export type ModelName = AnthropicChatModel | OpenRouterModel | string;
 
 export const OPENROUTER_DEFAULT_MODELS = [
-    "openrouter/auto",
-    "nvidia/nemotron-3-super:free",
-    "x-ai/grok-4-fast",
-    "google/gemma-4-26b-a4b-it:free",
+    "google/gemma-3-27b-it",
+    "google/gemma-3-12b-it",
+    "nvidia/nemotron-nano-9b-v2",
 ] as const;
 
 export function createAdapter(provider: ProviderName, model: ModelName) {

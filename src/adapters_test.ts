@@ -37,7 +37,7 @@ Deno.test("createAdapter returns an adapter for anthropic provider/model", () =>
 });
 
 Deno.test("createAdapter returns an adapter for openrouter provider/model", () => {
-    const adapter = createAdapter("openrouter", "openrouter/auto");
+    const adapter = createAdapter("openrouter", "google/gemma-3-27b-it");
     assertEquals(typeof adapter, "object");
     assertEquals(adapter !== null, true);
 });
