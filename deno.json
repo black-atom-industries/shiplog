@@ -6,10 +6,12 @@
     "exports": "./src/main.ts",
     "tasks": {
         "install": "deno install --global -f -q --allow-run --allow-read --allow-env --allow-net --allow-write --name shiplog --config deno.json src/main.ts",
+        "install-hooks": "git config core.hooksPath .githooks && echo 'Hooks installed.'",
         "compile": "deno compile --allow-run --allow-read --allow-env --allow-net --allow-write --output shiplog src/main.ts",
         "schema": "deno run --allow-read --allow-env --allow-write scripts/generate-schema.ts",
         "test": "deno test --allow-read --allow-env --allow-write",
         "check": "deno check .",
+        "checks": "./scripts/checks.sh",
         "lint": "deno lint",
         "fmt": "deno fmt"
     },
