@@ -1,5 +1,5 @@
 import { Command } from "@cliffy/command";
-import * as colors from "@std/fmt/colors";
+import * as colors from "../ui/colors.ts";
 import { loadConfig } from "../config/loader.ts";
 import type { MergedConfig } from "../config/schema.ts";
 import { getCommitHistory, getCurrentBranch, getStagedDiff, isGitRepo } from "../git/diff.ts";

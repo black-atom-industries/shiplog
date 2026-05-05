@@ -1,5 +1,5 @@
 import { Command } from "@cliffy/command";
-import * as colors from "@std/fmt/colors";
+import * as colors from "./ui/colors.ts";
 import { commitCommand } from "./commands/commit.ts";
 import { branchCommand } from "./commands/branch.ts";
 import { configCommand } from "./commands/config.ts";

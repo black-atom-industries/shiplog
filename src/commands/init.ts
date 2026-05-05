@@ -1,5 +1,5 @@
 import { Command } from "@cliffy/command";
-import * as colors from "@std/fmt/colors";
+import * as colors from "../ui/colors.ts";
 import { REPO_CONFIG_NAME } from "../config/paths.ts";
 import { isGitRepo } from "../git/diff.ts";
 

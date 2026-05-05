@@ -1,6 +1,6 @@
 import { Command } from "@cliffy/command";
 import { stringify as stringifyToml } from "@std/toml";
-import * as colors from "@std/fmt/colors";
+import * as colors from "../ui/colors.ts";
 import { loadConfig } from "../config/loader.ts";
 import { CONFIG_DIR, GLOBAL_CONFIG_PATH } from "../config/paths.ts";
 import { GlobalConfigSchema } from "../config/schema.ts";

@@ -1,5 +1,5 @@
 import { Confirm, Input, Select } from "@cliffy/prompt";
-import * as colors from "@std/fmt/colors";
+import * as colors from "./colors.ts";
 import type { MergedConfig } from "../config/schema.ts";
 import { openInEditor } from "./prompts.ts";
 import { commit } from "../git/operations.ts";

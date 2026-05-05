@@ -1,4 +1,4 @@
-import * as colors from "@std/fmt/colors";
+import * as colors from "./colors.ts";
 import { Confirm } from "@cliffy/prompt";
 
 export async function isLazygitInstalled(): Promise<boolean> {
