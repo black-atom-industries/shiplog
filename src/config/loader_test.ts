@@ -46,8 +46,13 @@ Deno.test("loadConfig - returns defaults when no config files exist", async () =
 
     try {
         const config = await loadConfig();
-        assertEquals(config.provider, "anthropic");
-        assertEquals(config.model, "anthropic/claude-haiku-4-6");
+        assertEquals(config.provider, "openrouter");
+        assertEquals(config.model, "google/gemma-4-26b-a4b-it");
+        assertEquals(config.models, [
+            "google/gemma-4-26b-a4b-it",
+            "google/gemma-4-31b-it",
+            "claude-haiku-4-6",
+        ]);
         assertEquals(config.summaryLength, 72);
         assertEquals(config.historyCount, 10);
         assertEquals(config.issuePattern, undefined);
@@ -69,7 +74,7 @@ Deno.test("loadConfig - repo config merges over global config", async () => {
             try {
                 const config = await loadConfig();
                 assertEquals(config.issuePattern, "(PROJ-\\d+)");
-                assertEquals(config.provider, "anthropic"); // global default preserved
+                assertEquals(config.provider, "openrouter"); // global default preserved
             } finally {
                 Deno.env.set("HOME", origHome ?? "");
             }

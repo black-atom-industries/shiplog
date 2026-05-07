@@ -1,14 +1,17 @@
 import { z } from "zod";
 import { PROVIDER_NAMES } from "../adapters.ts";
 
+const ProviderModelsSchema = z.object({
+    model: z.string(),
+    models: z.array(z.string()),
+});
+
 export const GlobalConfigSchema = z.object({
-    provider: z.enum(PROVIDER_NAMES as unknown as ["anthropic", "openrouter"]).default("anthropic"),
-    model: z.string().default("anthropic/claude-haiku-4-6"),
-    models: z.array(z.string()).default([
-        "claude-opus-4-5",
-        "claude-sonnet-4-5",
-        "claude-haiku-4-6",
-    ]),
+    provider: z.enum(PROVIDER_NAMES as unknown as ["anthropic", "openrouter"]).default(
+        "openrouter",
+    ),
+    openrouter: ProviderModelsSchema.optional(),
+    anthropic: ProviderModelsSchema.optional(),
     summaryLength: z.number().positive().default(72),
     historyCount: z.number().positive().default(10),
 });
@@ -48,6 +51,8 @@ export const RepoConfigSchema = z.object({
 export const MergedConfigSchema = z.object({
     ...GlobalConfigSchema.shape,
     ...RepoConfigSchema.shape,
+    model: z.string(),
+    models: z.array(z.string()),
 });
 
 export type GlobalConfig = z.infer<typeof GlobalConfigSchema>;

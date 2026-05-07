@@ -3,56 +3,45 @@ import { GlobalConfigSchema, MergedConfigSchema, RepoConfigSchema } from "./sche
 
 Deno.test("GlobalConfigSchema - parses empty object with defaults", () => {
     const result = GlobalConfigSchema.parse({});
-    assertEquals(result.provider, "anthropic");
-    assertEquals(result.model, "anthropic/claude-haiku-4-6");
-    assertEquals(result.models, [
-        "claude-opus-4-5",
-        "claude-sonnet-4-5",
-        "claude-haiku-4-6",
-    ]);
+    assertEquals(result.provider, "openrouter");
+    assertEquals(result.openrouter, undefined);
+    assertEquals(result.anthropic, undefined);
     assertEquals(result.summaryLength, 72);
     assertEquals(result.historyCount, 10);
 });
 
 Deno.test("GlobalConfigSchema - accepts valid overrides", () => {
     const result = GlobalConfigSchema.parse({
-        model: "claude-sonnet-4-5",
+        provider: "anthropic",
+        anthropic: {
+            model: "claude-sonnet-4-5",
+            models: ["claude-sonnet-4-5", "claude-haiku-4-6"],
+        },
         summaryLength: 50,
     });
-    assertEquals(result.model, "claude-sonnet-4-5");
-    assertEquals(result.summaryLength, 50);
     assertEquals(result.provider, "anthropic");
+    assertEquals(result.anthropic?.model, "claude-sonnet-4-5");
+    assertEquals(result.anthropic?.models, ["claude-sonnet-4-5", "claude-haiku-4-6"]);
+    assertEquals(result.summaryLength, 50);
 });
 
 Deno.test("GlobalConfigSchema - rejects invalid provider", () => {
     assertThrows(() => GlobalConfigSchema.parse({ provider: "openai" }));
 });
 
-Deno.test("GlobalConfigSchema - accepts any string as model (openrouter compatibility)", () => {
-    // OpenRouter uses dynamic provider/model-name strings, so model accepts any string
-    const result = GlobalConfigSchema.parse({ model: "openai/gpt-5" });
-    assertEquals(result.model, "openai/gpt-5");
-
-    const result2 = GlobalConfigSchema.parse({ model: "x-ai/grok-4-fast" });
-    assertEquals(result2.model, "x-ai/grok-4-fast");
-
-    const result3 = GlobalConfigSchema.parse({ model: "google/gemma-3-27b-it" });
-    assertEquals(result3.model, "google/gemma-3-27b-it");
-});
-
-Deno.test("GlobalConfigSchema - accepts any strings in models array (openrouter compatibility)", () => {
+Deno.test("GlobalConfigSchema - accepts per-provider model configs", () => {
     const result = GlobalConfigSchema.parse({
-        models: [
-            "anthropic/claude-sonnet-4.5",
-            "openai/gpt-5",
-            "google/gemma-3-12b-it",
-        ],
+        openrouter: {
+            model: "google/gemma-4-26b-a4b-it",
+            models: ["google/gemma-4-26b-a4b-it", "google/gemma-4-31b-it"],
+        },
+        anthropic: {
+            model: "claude-haiku-4-6",
+            models: ["claude-haiku-4-6", "claude-sonnet-4-5"],
+        },
     });
-    assertEquals(result.models, [
-        "anthropic/claude-sonnet-4.5",
-        "openai/gpt-5",
-        "google/gemma-3-12b-it",
-    ]);
+    assertEquals(result.openrouter?.model, "google/gemma-4-26b-a4b-it");
+    assertEquals(result.anthropic?.model, "claude-haiku-4-6");
 });
 
 Deno.test("GlobalConfigSchema - rejects non-positive summaryLength", () => {
@@ -75,14 +64,21 @@ Deno.test("RepoConfigSchema - parses issue config", () => {
     assertEquals(result.issuePrefix, "PROJ-");
 });
 
-Deno.test("MergedConfigSchema - combines global and repo fields", () => {
+Deno.test("MergedConfigSchema - combines global, resolved, and repo fields", () => {
     const result = MergedConfigSchema.parse({
-        provider: "anthropic",
-        model: "claude-haiku-4-5",
+        provider: "openrouter",
+        model: "google/gemma-4-26b-a4b-it",
+        models: ["google/gemma-4-26b-a4b-it", "google/gemma-4-31b-it"],
         issuePattern: "(\\w+-\\d+)",
     });
-    assertEquals(result.provider, "anthropic");
+    assertEquals(result.provider, "openrouter");
+    assertEquals(result.model, "google/gemma-4-26b-a4b-it");
+    assertEquals(result.models, ["google/gemma-4-26b-a4b-it", "google/gemma-4-31b-it"]);
     assertEquals(result.issuePattern, "(\\w+-\\d+)");
+});
+
+Deno.test("MergedConfigSchema - requires model and models", () => {
+    assertThrows(() => MergedConfigSchema.parse({ provider: "openrouter", issuePattern: "(.+)" }));
 });
 
 Deno.test("RepoConfigSchema - useLazygit defaults to true", () => {

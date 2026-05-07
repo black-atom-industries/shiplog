@@ -26,8 +26,7 @@ Deno.test("generateJsonSchema - model is a string type (openrouter compatibility
 
 Deno.test("generateJsonSchema - includes defaults", () => {
     const schema = JSON.parse(generateJsonSchema());
-    assertEquals(schema.properties.provider.default, "anthropic");
-    assertEquals(schema.properties.model.default, "anthropic/claude-haiku-4-6");
+    assertEquals(schema.properties.provider.default, "openrouter");
     assertEquals(schema.properties.summary_length.default, 72);
     assertEquals(schema.properties.history_count.default, 10);
 });

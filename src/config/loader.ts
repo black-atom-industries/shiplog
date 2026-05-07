@@ -28,12 +28,38 @@ async function readTomlFile(path: string): Promise<Record<string, unknown> | nul
     }
 }
 
+const DEFAULT_PROVIDER_MODELS: Record<string, { model: string; models: string[] }> = {
+    openrouter: {
+        model: "google/gemma-4-26b-a4b-it",
+        models: [
+            "google/gemma-4-26b-a4b-it",
+            "google/gemma-4-31b-it",
+            "claude-haiku-4-6",
+        ],
+    },
+    anthropic: {
+        model: "claude-haiku-4-6",
+        models: ["claude-haiku-4-6", "claude-sonnet-4-5"],
+    },
+};
+
 export async function loadConfig(): Promise<MergedConfig> {
     const globalRaw = await readTomlFile(getGlobalConfigPath());
     const globalConfig = GlobalConfigSchema.parse(globalRaw ?? {});
 
+    const providerKey = globalConfig.provider;
+    const providerConfig = providerKey === "openrouter"
+        ? globalConfig.openrouter
+        : globalConfig.anthropic;
+    const defaults = DEFAULT_PROVIDER_MODELS[providerKey];
+
+    const resolved = {
+        model: providerConfig?.model ?? defaults.model,
+        models: providerConfig?.models ?? defaults.models,
+    };
+
     const repoRaw = await readTomlFile(REPO_CONFIG_NAME);
     const repoConfig = repoRaw ? RepoConfigSchema.parse(repoRaw) : {};
 
-    return MergedConfigSchema.parse({ ...globalConfig, ...repoConfig });
+    return MergedConfigSchema.parse({ ...globalConfig, ...resolved, ...repoConfig });
 }
