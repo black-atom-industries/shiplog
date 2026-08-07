@@ -31,13 +31,17 @@ Deno.test("OPENROUTER_DEFAULT_MODELS is a non-empty array of strings", () => {
 });
 
 Deno.test("createAdapter returns an adapter for anthropic provider/model", () => {
-    const adapter = createAdapter("anthropic", "claude-haiku-4-5");
+    const adapter = createAdapter("anthropic", "claude-haiku-4-5", {
+        anthropicApiKey: "test-api-key",
+    });
     assertEquals(typeof adapter, "object");
     assertEquals(adapter !== null, true);
 });
 
 Deno.test("createAdapter returns an adapter for openrouter provider/model", () => {
-    const adapter = createAdapter("openrouter", "google/gemma-3-27b-it");
+    const adapter = createAdapter("openrouter", "google/gemma-3-27b-it", {
+        openRouterApiKey: "test-api-key",
+    });
     assertEquals(typeof adapter, "object");
     assertEquals(adapter !== null, true);
 });

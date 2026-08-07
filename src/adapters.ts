@@ -1,5 +1,10 @@
-import { ANTHROPIC_MODELS, type AnthropicChatModel, anthropicText } from "@tanstack/ai-anthropic";
-import { openRouterText } from "@tanstack/ai-openrouter";
+import {
+    ANTHROPIC_MODELS,
+    type AnthropicChatModel,
+    anthropicText,
+    createAnthropicChat,
+} from "@tanstack/ai-anthropic";
+import { createOpenRouterText, openRouterText } from "@tanstack/ai-openrouter";
 
 export { ANTHROPIC_MODELS };
 
@@ -19,12 +24,20 @@ export const OPENROUTER_DEFAULT_MODELS = [
     "claude-haiku-4-6",
 ] as const;
 
-export function createAdapter(provider: ProviderName, model: ModelName) {
+export function createAdapter(
+    provider: ProviderName,
+    model: ModelName,
+    options: { anthropicApiKey?: string; openRouterApiKey?: string } = {},
+) {
     switch (provider) {
         case "anthropic":
-            return anthropicText(model as AnthropicChatModel);
+            return options.anthropicApiKey
+                ? createAnthropicChat(model as AnthropicChatModel, options.anthropicApiKey)
+                : anthropicText(model as AnthropicChatModel);
         case "openrouter":
-            return openRouterText(model as OpenRouterModel);
+            return options.openRouterApiKey
+                ? createOpenRouterText(model as OpenRouterModel, options.openRouterApiKey)
+                : openRouterText(model as OpenRouterModel);
         default: {
             const _exhaustive: never = provider;
             throw new Error(`Unknown provider: ${_exhaustive}`);
