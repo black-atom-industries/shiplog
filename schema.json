@@ -44,40 +44,6 @@
         "use_lazygit": {
             "default": true,
             "type": "boolean"
-        },
-        "commit_types": {
-            "default": [
-                "feat",
-                "fix",
-                "docs",
-                "style",
-                "refactor",
-                "test",
-                "chore",
-                "ci",
-                "perf",
-                "revert"
-            ],
-            "type": "array",
-            "items": {
-                "type": "string"
-            }
-        },
-        "scopes": {
-            "default": [
-                "ui",
-                "api",
-                "config",
-                "auth",
-                "ci",
-                "build",
-                "docs",
-                "test"
-            ],
-            "type": "array",
-            "items": {
-                "type": "string"
-            }
         }
     },
     "additionalProperties": false

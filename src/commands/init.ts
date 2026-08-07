@@ -22,7 +22,6 @@ export const initCommand = new Command()
 
         const content = [
             `# use_lazygit = true`,
-            `# commit_types = ["feat", "fix", "docs", "style", "refactor", "test", "chore", "ci", "perf", "revert"]`,
             `# issue_pattern = "(\\\\w+-\\\\d+)"`,
             `# issue_prefix = ""`,
             "",

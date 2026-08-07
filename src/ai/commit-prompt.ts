@@ -8,15 +8,19 @@ interface CommitPromptOptions {
 export function buildCommitPrompt(options: CommitPromptOptions): string {
     const { diff, commitHistory, summaryLength, issueId } = options;
 
-    let prompt = `Generate a conventional commit message for the git diff below.
+    let prompt = `Generate a commit message for the git diff below.
 
-CRITICAL: Return ONLY the commit message. Do not include ANY explanations, analysis, commentary, or additional text. Do not describe what you see in the diff. Just output the commit message and nothing else.
+CRITICAL: Return ONLY the commit message. Do not include explanations, analysis, commentary, or additional text.
 
 Requirements:
 - Summary line MUST NOT exceed ${summaryLength} characters
-- Use conventional commit format (type(scope): description)
-- Only add body if absolutely necessary for complex changes
-- NO explanations, NO analysis, NO commentary
+- Use imperative mood and explain why, not just what changed
+- Do not use a type(scope): prefix
+- Omit brackets when no ticket or issue is provided
+- Start breaking changes with BREAKING: after the optional ticket
+- Only add a body for large or non-obvious changes
+- Bodies use bullets, one per moving part, stating what changed and why
+- Wrap body lines at 72 characters
 
 Output format: Just the commit message, nothing more.`;
 
@@ -40,9 +44,9 @@ ${diff}
     if (issueId) {
         prompt += `
 
-Please prefix the summary line with the following issue ID: ${issueId}
+Prefix the summary line with this ticket or issue key in square brackets: [${issueId}]
 
-Example: ${issueId} feat: some new feature`;
+Example: [${issueId}] add the missing validation`;
     }
 
     return prompt;

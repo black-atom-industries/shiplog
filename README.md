@@ -61,7 +61,7 @@ Requires the provider's API key as an environment variable:
 ### Commit
 
 ```sh
-# Guided conventional commit builder (interactive)
+# Guided commit builder (interactive)
 shiplog commit
 
 # AI-generated commit message (interactive)
@@ -136,14 +136,12 @@ ID from [openrouter.ai/models](https://openrouter.ai/models).
 
 ```toml
 use_lazygit = true
-commit_types = ["feat", "fix", "docs", "style", "refactor", "test", "chore", "ci", "perf", "revert"]
 issue_pattern = "(\\w+-\\d+)"
 issue_prefix = ""
 ```
 
 When `issue_pattern` matches the current branch name, the extracted issue ID is prepended to commit
-messages automatically. `commit_types` can be customised per repo. Set `use_lazygit = false` to
-disable the lazygit staging prompt.
+messages in square brackets. Set `use_lazygit = false` to disable the lazygit staging prompt.
 
 ## Development
 

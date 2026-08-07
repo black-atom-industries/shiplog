@@ -6,10 +6,17 @@ Deno.test("sanitizeCommitMessage - passes through clean input unchanged", () => 
     assertEquals(sanitizeCommitMessage(input), input);
 });
 
-Deno.test("sanitizeCommitMessage - strips leading colon (gemma-style prefix)", () => {
+Deno.test("sanitizeCommitMessage - strips a leading colon", () => {
     assertEquals(
-        sanitizeCommitMessage(":chore(shiplog): update default model"),
-        "chore(shiplog): update default model",
+        sanitizeCommitMessage(":update the default model"),
+        "update the default model",
+    );
+});
+
+Deno.test("sanitizeCommitMessage - preserves a ticket prefix", () => {
+    assertEquals(
+        sanitizeCommitMessage("[WEBSDK-123] add the missing validation"),
+        "[WEBSDK-123] add the missing validation",
     );
 });
 

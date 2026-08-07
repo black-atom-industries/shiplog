@@ -4,7 +4,7 @@ export function sanitizeCommitMessage(raw: string): string {
         .replace(/^`|`$/gm, "")
         .replace(/^["']|["']$/g, "")
         .replace(/\r/g, "")
-        .replace(/^[^A-Za-z0-9]+/, "");
+        .replace(/^[^\[A-Za-z0-9]+/, "");
 }
 
 export function sanitizeBranchName(raw: string): string {

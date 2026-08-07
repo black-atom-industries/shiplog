@@ -1,80 +1,51 @@
 import { assertEquals } from "@std/assert";
 import { buildCommitMessage } from "./commit-builder.ts";
 
-Deno.test("buildCommitMessage - type and subject only", () => {
+Deno.test("buildCommitMessage - summary without ticket", () => {
     const result = buildCommitMessage({
-        type: "feat",
-        scope: "",
+        ticket: "",
         breaking: false,
-        subject: "add login page",
+        subject: "keep generated configs out of commits",
         body: "",
-        footer: "",
+        links: "",
     });
-    assertEquals(result, "feat: add login page");
+    assertEquals(result, "keep generated configs out of commits");
 });
 
-Deno.test("buildCommitMessage - with scope", () => {
+Deno.test("buildCommitMessage - prefixes a ticket or issue", () => {
     const result = buildCommitMessage({
-        type: "fix",
-        scope: "auth",
+        ticket: "WEBSDK-123",
         breaking: false,
-        subject: "handle expired tokens",
+        subject: "keep generated configs out of commits",
         body: "",
-        footer: "",
+        links: "",
     });
-    assertEquals(result, "fix(auth): handle expired tokens");
+    assertEquals(result, "[WEBSDK-123] keep generated configs out of commits");
 });
 
-Deno.test("buildCommitMessage - breaking change appends !", () => {
+Deno.test("buildCommitMessage - adds BREAKING after the ticket", () => {
     const result = buildCommitMessage({
-        type: "feat",
-        scope: "api",
+        ticket: "WEBSDK-123",
         breaking: true,
-        subject: "remove v1 endpoints",
+        subject: "remove the v1 API",
         body: "",
-        footer: "",
+        links: "",
     });
-    assertEquals(result, "feat(api)!: remove v1 endpoints");
+    assertEquals(result, "[WEBSDK-123] BREAKING: remove the v1 API");
 });
 
-Deno.test("buildCommitMessage - with body", () => {
+Deno.test("buildCommitMessage - includes a bullet body and related links", () => {
     const result = buildCommitMessage({
-        type: "refactor",
-        scope: "",
+        ticket: "WEBSDK-123",
         breaking: false,
-        subject: "simplify auth flow",
-        body: "Reduces complexity by removing the intermediate layer.",
-        footer: "",
+        subject: "keep generated configs out of commits",
+        body: "- Ignore generated configs, so personal state stays out of history.",
+        links: "https://jira.example.com/browse/WEBSDK-123",
     });
     assertEquals(
         result,
-        "refactor: simplify auth flow\n\nReduces complexity by removing the intermediate layer.",
-    );
-});
-
-Deno.test("buildCommitMessage - with footer", () => {
-    const result = buildCommitMessage({
-        type: "fix",
-        scope: "",
-        breaking: false,
-        subject: "resolve crash on startup",
-        body: "",
-        footer: "Closes #42",
-    });
-    assertEquals(result, "fix: resolve crash on startup\n\nCloses #42");
-});
-
-Deno.test("buildCommitMessage - full message", () => {
-    const result = buildCommitMessage({
-        type: "feat",
-        scope: "ui",
-        breaking: true,
-        subject: "redesign nav",
-        body: "Complete overhaul of the navigation component.",
-        footer: "BREAKING CHANGE: nav prop renamed to navigation\nCloses #99",
-    });
-    assertEquals(
-        result,
-        "feat(ui)!: redesign nav\n\nComplete overhaul of the navigation component.\n\nBREAKING CHANGE: nav prop renamed to navigation\nCloses #99",
+        "[WEBSDK-123] keep generated configs out of commits\n\n" +
+            "- Ignore generated configs, so personal state stays out of history.\n\n" +
+            "https://jira.example.com/browse/WEBSDK-123",
     );
 });

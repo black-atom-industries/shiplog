@@ -37,5 +37,6 @@ packages are new and evolving.
 
 ## Conventions
 
-- Conventional commits (`type(scope): description`)
+- Commit messages use `[TICKET-123] summary` when tied to a ticket or issue, otherwise `summary`;
+  breaking changes start with `BREAKING:`
 - `archive/v1-bash` branch contains the original bash implementation (deprecated)

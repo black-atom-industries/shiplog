@@ -29,21 +29,25 @@ Deno.test("buildCommitPrompt - includes commit history when provided", () => {
     assertEquals(prompt.includes("Previous commits"), true);
 });
 
-Deno.test("buildCommitPrompt - excludes history section when empty", () => {
+Deno.test("buildCommitPrompt - omits ticket brackets when no ticket is provided", () => {
     const prompt = buildCommitPrompt({
         diff: "some diff",
         commitHistory: "",
         summaryLength: 72,
     });
     assertEquals(prompt.includes("Previous commits"), false);
+    assertEquals(prompt.includes("Omit brackets when no ticket or issue is provided"), true);
 });
 
-Deno.test("buildCommitPrompt - includes issue ID when provided", () => {
+Deno.test("buildCommitPrompt - uses the ticket-prefixed format", () => {
     const prompt = buildCommitPrompt({
         diff: "some diff",
         commitHistory: "",
         summaryLength: 72,
         issueId: "PROJ-123",
     });
-    assertEquals(prompt.includes("PROJ-123"), true);
+    assertEquals(prompt.includes("[PROJ-123]"), true);
+    assertEquals(prompt.includes("Start breaking changes with BREAKING:"), true);
+    assertEquals(prompt.includes("type(scope):"), true);
+    assertEquals(prompt.includes("conventional commit"), false);
 });

@@ -142,7 +142,12 @@ export const commitCommand = new Command()
 
         if (!options.smart) {
             await ensureStagedChanges(config.useLazygit);
-            await runGuidedCommit(config);
+            const issueId = extractIssueId(
+                await getCurrentBranch(),
+                config.issuePattern,
+                config.issuePrefix,
+            );
+            await runGuidedCommit(issueId);
             await handlePush(!!options.push, !!options.force);
             return;
         }

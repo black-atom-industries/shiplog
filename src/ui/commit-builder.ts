@@ -1,48 +1,25 @@
-import { Confirm, Input, Select } from "@cliffy/prompt";
+import { Confirm, Input } from "@cliffy/prompt";
 import * as colors from "./colors.ts";
-import type { MergedConfig } from "../config/schema.ts";
 import { openInEditor } from "./prompts.ts";
 import { commit } from "../git/operations.ts";
 
 export interface CommitParts {
-    type: string;
-    scope: string;
+    ticket: string;
     breaking: boolean;
     subject: string;
     body: string;
-    footer: string;
+    links: string;
 }
 
 export function buildCommitMessage(parts: CommitParts): string {
-    const { type, scope, breaking, subject, body, footer } = parts;
-
-    const scopePart = scope ? `(${scope})` : "";
-    const breakingPart = breaking ? "!" : "";
-    let message = `${type}${scopePart}${breakingPart}: ${subject}`;
+    const { ticket, breaking, subject, body, links } = parts;
+    const prefixedSubject = breaking ? `BREAKING: ${subject}` : subject;
+    let message = ticket ? `[${ticket}] ${prefixedSubject}` : prefixedSubject;
 
     if (body) message += `\n\n${body}`;
-    if (footer) message += `\n\n${footer}`;
+    if (links) message += `\n\n${links}`;
 
     return message;
-}
-
-const CUSTOM_OPTION = "✏ custom...";
-
-async function selectWithCustom(message: string, options: string[]): Promise<string> {
-    const selected = await Select.prompt({
-        message,
-        search: true,
-        options: [...options.map((o) => ({ name: o, value: o })), {
-            name: CUSTOM_OPTION,
-            value: CUSTOM_OPTION,
-        }],
-    }) as string;
-
-    if (selected === CUSTOM_OPTION) {
-        return await Input.prompt({ message: `${message} (custom)` });
-    }
-
-    return selected;
 }
 
 async function promptWithEditorEscape(message: string, initial = ""): Promise<string> {
@@ -59,9 +36,9 @@ async function promptWithEditorEscape(message: string, initial = ""): Promise<st
     return value;
 }
 
-export async function runGuidedCommit(config: MergedConfig): Promise<void> {
+export async function runGuidedCommit(issueId?: string): Promise<void> {
     try {
-        await _runGuidedCommit(config);
+        await _runGuidedCommit(issueId);
     } catch (e) {
         if (e instanceof Error && e.message.includes("Interrupted")) {
             console.log("\nCommit cancelled.");
@@ -71,48 +48,27 @@ export async function runGuidedCommit(config: MergedConfig): Promise<void> {
     }
 }
 
-async function _runGuidedCommit(config: MergedConfig): Promise<void> {
-    // 1. Type
-    const type = await selectWithCustom("Select commit type", config.commitTypes);
+async function _runGuidedCommit(issueId?: string) {
+    const ticket = await promptWithEditorEscape("Ticket or issue (optional)", issueId);
 
-    // 2. Scope
-    const scopeRaw = await selectWithCustom("Select scope (Enter to skip)", [
-        "(none)",
-        ...config.scopes,
-    ]);
-    const scope = scopeRaw === "(none)" ? "" : scopeRaw;
-
-    // 3. Breaking change
-    const breaking = await Confirm.prompt({
-        message: "Breaking change?",
-        default: false,
-    });
-
-    // 4. Subject
     let subject = "";
     while (!subject.trim()) {
-        subject = await promptWithEditorEscape("Short description");
+        subject = await promptWithEditorEscape("Summary (imperative, why first)");
         if (!subject.trim()) {
-            console.error(colors.red("Subject cannot be empty."));
+            console.error(colors.red("Summary cannot be empty."));
         }
     }
 
-    // 5. Body
-    const body = await promptWithEditorEscape("Body (optional, Enter to skip)");
+    const breaking = await Confirm.prompt({ message: "Breaking change?", default: false });
+    const body = await promptWithEditorEscape("Bullet body (optional)");
+    const links = await promptWithEditorEscape("Related links (optional)");
 
-    // 6. Footer
-    const footer = await promptWithEditorEscape(
-        "Footer (optional — BREAKING CHANGE: ..., Closes #N)",
-    );
-
-    // 7. Preview
     const message = buildCommitMessage({
-        type,
-        scope: scope.trim(),
+        ticket: ticket.trim(),
         breaking,
         subject: subject.trim(),
         body: body.trim(),
-        footer: footer.trim(),
+        links: links.trim(),
     });
 
     console.log("");
@@ -122,7 +78,6 @@ async function _runGuidedCommit(config: MergedConfig): Promise<void> {
     console.log(colors.dim("─".repeat(40)));
     console.log("");
 
-    // 8. Confirm
     const confirmed = await Confirm.prompt({ message: "Commit?", default: true });
     if (!confirmed) {
         console.log("Commit cancelled.");
