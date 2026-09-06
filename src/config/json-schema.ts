@@ -23,5 +23,5 @@ export function generateJsonSchema(): string {
     // Remove the required array — all fields have defaults, so the config is fully optional
     delete converted.required;
 
-    return JSON.stringify(converted, null, 2);
+    return `${JSON.stringify(converted, null, 4)}\n`;
 }

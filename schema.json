@@ -3,27 +3,50 @@
     "type": "object",
     "properties": {
         "provider": {
-            "default": "anthropic",
+            "default": "openrouter",
             "type": "string",
             "enum": [
                 "anthropic",
                 "openrouter"
             ]
         },
-        "model": {
-            "default": "anthropic/claude-haiku-4-6",
-            "type": "string"
-        },
-        "models": {
-            "default": [
-                "claude-opus-4-5",
-                "claude-sonnet-4-5",
-                "claude-haiku-4-6"
+        "openrouter": {
+            "type": "object",
+            "properties": {
+                "model": {
+                    "type": "string"
+                },
+                "models": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": [
+                "model",
+                "models"
             ],
-            "type": "array",
-            "items": {
-                "type": "string"
-            }
+            "additionalProperties": false
+        },
+        "anthropic": {
+            "type": "object",
+            "properties": {
+                "model": {
+                    "type": "string"
+                },
+                "models": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": [
+                "model",
+                "models"
+            ],
+            "additionalProperties": false
         },
         "summary_length": {
             "default": 72,
@@ -44,6 +67,15 @@
         "use_lazygit": {
             "default": true,
             "type": "boolean"
+        },
+        "model": {
+            "type": "string"
+        },
+        "models": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
         }
     },
     "additionalProperties": false

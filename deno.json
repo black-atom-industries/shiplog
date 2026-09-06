@@ -9,6 +9,7 @@
         "install-hooks": "git config core.hooksPath .githooks && echo 'Hooks installed.'",
         "compile": "deno compile --allow-run --allow-read --allow-env --allow-net --allow-write --output shiplog src/main.ts",
         "schema": "deno run --allow-read --allow-env --allow-write scripts/generate-schema.ts",
+        "schema:check": "deno run --allow-read --allow-env scripts/generate-schema.ts --check",
         "test": "deno test --allow-read --allow-env --allow-write",
         "check": "deno check .",
         "checks": "./scripts/checks.sh",
