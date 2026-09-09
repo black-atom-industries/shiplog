@@ -24,17 +24,21 @@ Account for pending, failed, missing and unrun targets. Unknown coverage stays u
 Compare on shared cases/repetitions: correctness and required facts first, editing burden second,
 speed last. Inspect repetition variability, cleanup changes and per-case times before overall
 medians. Format passes do not prove accuracy. Do not invent costs, confidence or unseen results.
-Incomplete or incomparable evidence can mean **no clear winner**; explain ties/exclusions briefly.
+Incomplete or incomparable evidence can mean **no clear winner**; explain ties/exclusions briefly. A
+quick tier with one repetition and two cases is a smoke test: report case-level warning and
+readability outcomes, not a general model winner. Do not extrapolate to skipped cases or claim that
+a changed-prompt run proves causation.
 
 ## Write the TL;DR
 
 Keep the entire recommendation block below 150 words (aim below 120):
 
 1. **One easy sentence** naming the suggested model, or saying there is no clear winner.
-2. **Up to three ranked models**, using human names, each with measured speed, a short **Pro** and
-   **Con**. Use a simple ordered list, not an engineering table. Say “Typical time”; a small note
-   defines it as the median of successful calls and identifies the case/sample scope. Link to
-   specific existing evidence anchors instead of retelling outputs or repeating full model IDs.
+2. **Up to three ranked models** (unranked case-level notes for a smoke test), using human names,
+   each with measured speed, a short **Pro** and **Con**. Use a simple ordered list, not an
+   engineering table. Say “Typical time”; a small note defines it as the median of successful calls
+   and identifies the case/sample scope. Link to specific existing evidence anchors instead of
+   retelling outputs or repeating full model IDs.
 3. **Tiny caveat:** provisional judgment, coverage/missing targets, and any historical-prompt
    mismatch. If instructions changed, say the revised prompt has not been benchmarked. Never rank an
    unrun provider. All retained evidence stays below, not repeated in the recommendation.

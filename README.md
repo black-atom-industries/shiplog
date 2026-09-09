@@ -165,7 +165,8 @@ deno task fmt      # Format
 ```
 
 For the opt-in, paid commit-message benchmark, see [evals/README.md](evals/README.md)
-(`deno task eval:commits`). It is not run by tests or CI.
+(`deno task eval:commits`, 6-call quick tier; `deno task eval:commits full`, 72 calls). It is not
+run by tests or CI.
 
 ## Stack
 

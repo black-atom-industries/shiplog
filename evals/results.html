@@ -1,6 +1,6 @@
 <!-- deno-fmt-ignore-file -->
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Commit benchmark: 2026-09-09T13-52-54.389Z-c1d207ebcc385199</title>
+<title>Commit benchmark: 2026-09-09T15:49:21.475Z</title>
 <style>
 :root { color-scheme: light dark; font: 16px/1.5 system-ui, sans-serif; }
 body { max-width: 960px; margin: auto; padding: 1rem; overflow-wrap: anywhere; }
@@ -17,26 +17,26 @@ li { margin: .5rem 0; } small { font-size: .85rem; }
 </style></head><body><main>
 <h1>Commit-message benchmark</h1>
 <!-- benchmark-review:start -->
-<section id="benchmark-review" class="note" aria-labelledby="benchmark-review-title" data-run-id="2026-09-09T13-52-54.389Z-c1d207ebcc385199">
+<section id="benchmark-review" class="note" aria-labelledby="benchmark-review-title" data-run-id="2026-09-09T15:49:21.475Z">
 <h2 id="benchmark-review-title">TL;DR</h2>
-<p>Choose Gemma for its more factual summaries, but check each message before using it.</p>
-<ol>
-<li><strong>Gemma 4 26B · 1.53s</strong><br>Pro: <a href="#case-3">Factual dependency updates.</a> Con: Wordy; misplaces the <a href="#case-4">breaking-change warning.</a></li>
-<li><strong>Luna · 2.98s</strong><br>Pro: <a href="#case-4">Explains complex changes better.</a> Con: Sometimes <a href="#case-3-m3-r3">invents reasons.</a></li>
-<li><strong>Flash Lite · 0.64s</strong><br>Pro: Fastest. Con: <a href="#case-5">Skips important details</a> and breaking-change warnings.</li>
-</ol>
-<p><small>Provisional: 54 responses, six cases, three repeats. Typical time: median of 18 successful calls per model across cases. <a href="#summary">Direct Anthropic unrun: missing ANTHROPIC_API_KEY.</a> This run used earlier writing instructions; the revised prompt has not been benchmarked.</small></p>
+<p><strong>No broad winner: Gemma and GPT included breaking warnings and migration advice; Gemini omitted both.</strong></p>
+<ul>
+<li><a href="#case-2-m1-r1">Gemma 4</a> · Typical time: 2.52s. <strong>Pro:</strong> concise fix and clear await guidance. <strong>Con:</strong> no issue seen in this sample.</li>
+<li><a href="#case-2-m2-r1">Gemini 3.5 Flash Lite</a> · Typical time: 0.85s. <strong>Pro:</strong> readable fix. <strong>Con:</strong> hides the caller change.</li>
+<li><a href="#case-2-m3-r1">GPT-5.6 Luna</a> · Typical time: 2.15s. <strong>Pro:</strong> explicit await guidance. <strong>Con:</strong> unnecessary, <a href="#case-1-m3-r1">unbulleted fix body</a>.</li>
+</ul>
+<p><small>Quick smoke test: one response per model per case; typical time is the median of its two successful calls. Dependency, refactor, CSV, ticket and direct Anthropic untested. No causal proof of prompt effects.</small></p>
 </section>
 <!-- benchmark-review:end -->
 <nav><a href="#summary">Run details</a> · <a href="#cases">Times</a> · <a href="#outputs">Responses</a></nav>
 <details id="summary"><summary>Run details &amp; model IDs</summary>
-<p>Run: 2026-09-09T13-52-54.389Z-c1d207ebcc385199 · completed · 54/54 done. Repeats per case/model: 3.</p>
-<ul><li id="model-1">M1: openrouter / google/gemma-4-26b-a4b-it · Typical time: 1.53s</li><li id="model-2">M2: openrouter / google/gemini-3.5-flash-lite · Typical time: 0.64s</li><li id="model-3">M3: openrouter / openai/gpt-5.6-luna · Typical time: 2.98s</li></ul>
-<ul><li>Historical run started 2026-09-09T13:52:54.390Z; OpenRouter only. Direct Anthropic: UNRUN (missing ANTHROPIC_API_KEY). Today&#39;s expanded JSON config was added later.</li><li>This run used earlier writing instructions; the revised prompt has not been benchmarked. Migrated offline with all responses and original context unchanged; no new calls.</li><li>Git HEAD at run: aaae8c6bd2baa58553fcc228561e06903e7337bf; benchmark implementation was uncommitted.</li><li>Deno: 2.9.6; V8: 15.0.245.2-rusty; TypeScript: 6.0.3.</li><li>Dependency lock SHA-256: c2b77eeb661b22713b40bf19f800fde6ed80fef5392533032b9e7e7a1b86f8ab.</li></ul>
+<p>Run: 2026-09-09T15:49:21.475Z · completed · 6/6 done. Repeats per case/model: 1.</p>
+<ul><li id="model-1">M1: openrouter / google/gemma-4-26b-a4b-it · Typical time: 2.52s</li><li id="model-2">M2: openrouter / google/gemini-3.5-flash-lite · Typical time: 0.85s</li><li id="model-3">M3: openrouter / openai/gpt-5.6-luna · Typical time: 2.15s</li></ul>
+<ul><li>Config: evals/config.json; Shiplog global/repo settings are not read.</li><li>Tier: quick; 6 planned calls; 2/6 fixtures: small-fix, breaking-api; 3/4 configured targets; 1 repetition(s).</li><li>Git HEAD: 60cce70a9f06c7db67dd85d0fb830fd5163af757 (worktree may contain uncommitted benchmark changes).</li><li>Deno: 2.9.6; V8: 15.0.245.2-rusty; TypeScript: 6.0.3.</li><li>Dependency lock SHA-256: c2b77eeb661b22713b40bf19f800fde6ed80fef5392533032b9e7e7a1b86f8ab.</li></ul>
 <p>Times cover adapter setup and the full response, not time to first token; exclude prompt building, cleanup and file writes. Sequential calls rotate model order per case/repeat; no retries or request overrides. Raw text is generate()’s trimmed return; failures have no partial text.</p>
 </details>
 <h2 id="cases">Typical time</h2><p><small>Median of successful calls: per case below, across cases in run details. Failures excluded; — means no successes. Small synthetic test, not a speed guarantee.</small></p>
-<div class="table-scroll"><table><thead><tr><th scope="col">Case</th><th scope="col">M1</th><th scope="col">M2</th><th scope="col">M3</th></tr></thead><tbody><tr><th scope="row">small-fix</th><td>1.63s · 3/3 done</td><td>0.66s · 3/3 done</td><td>1.57s · 3/3 done</td></tr><tr><th scope="row">refactor</th><td>1.60s · 3/3 done</td><td>0.70s · 3/3 done</td><td>3.09s · 3/3 done</td></tr><tr><th scope="row">dependency</th><td>0.74s · 3/3 done</td><td>0.64s · 3/3 done</td><td>1.47s · 3/3 done</td></tr><tr><th scope="row">breaking-api</th><td>2.05s · 3/3 done</td><td>0.62s · 3/3 done</td><td>3.37s · 3/3 done</td></tr><tr><th scope="row">multi-file-feature</th><td>1.72s · 3/3 done</td><td>0.55s · 3/3 done</td><td>3.02s · 3/3 done</td></tr><tr><th scope="row">issue-prefix</th><td>0.65s · 3/3 done</td><td>0.68s · 3/3 done</td><td>4.87s · 3/3 done</td></tr></tbody></table></div>
+<div class="table-scroll"><table><thead><tr><th scope="col">Case</th><th scope="col">M1</th><th scope="col">M2</th><th scope="col">M3</th></tr></thead><tbody><tr><th scope="row">small-fix</th><td>2.64s · 1/1 done</td><td>0.71s · 1/1 done</td><td>1.48s · 1/1 done</td></tr><tr><th scope="row">breaking-api</th><td>2.40s · 1/1 done</td><td>0.99s · 1/1 done</td><td>2.82s · 1/1 done</td></tr></tbody></table></div>
 <h2 id="outputs">All responses</h2><p><small>Model IDs are in <a href="#summary">run details</a>. Each response appears once unless cleanup changed it. Issues flag format checks, not factual correctness; unlisted checks passed. Exact prompts include the original diff and history.</small></p>
 <details id="case-1"><summary>small-fix</summary>
 <p><small>Summary limit: 72; ticket: none; breaking prefix required: no.</small></p>
@@ -47,12 +47,17 @@ CRITICAL: Return ONLY the commit message. Do not include explanations, analysis,
 
 Requirements:
 - Summary line MUST NOT exceed 72 characters
-- Use imperative mood and explain why, not just what changed
+- Use imperative mood to state the actual change plainly
+- Use short, direct sentences and familiar words; keep meaningful technical names
+- Explain purpose only when the supplied diff or context supports it
+- Do not invent benefits or reasons
 - Do not use a type(scope): prefix
 - Omit brackets when no ticket or issue is provided
-- Start breaking changes with BREAKING: after the optional ticket
-- Only add a body for large or non-obvious changes
-- Bodies use bullets, one per moving part, stating what changed and why
+- A breaking change means existing callers must change their code to keep working
+- Start breaking changes with BREAKING: at the start of the summary, after the optional ticket and its following space
+- For breaking API changes, always add a body with concise guidance on how callers must change their code
+- Only add a body when the reader needs an explanation
+- Bodies use bullets, one per moving part; ground any reasons in the supplied diff or context
 - Wrap body lines at 72 characters
 
 Output format: Just the commit message, nothing more.
@@ -88,206 +93,19 @@ new file mode 100644
 +});
 
 ```</code></pre></details>
-<p id="case-1-m1-r1">M1 · repeat 1 · 1634.5760830000002 ms · 2026-09-09T13:52:54.391Z</p>
-<pre><code>Fix pageCount to include the final partial page
+<p id="case-1-m1-r1">M1 · repeat 1 · 2640.8901250000004 ms · 2026-09-09T15:49:21.476Z</p>
+<pre><code>Fix pageCount to include the final partial page</code></pre>
 
-* Use Math.ceil instead of Math.floor so that remaining items that
-  do not fill a complete page are still accounted for in the total
-  page count.
-* Add unit tests to verify correct page calculation for partial and
-  empty sets.</code></pre>
+<p id="case-1-m2-r1">M2 · repeat 1 · 708.010792 ms · 2026-09-09T15:49:24.119Z</p>
+<pre><code>Fix page count calculation to include partial pages and add tests</code></pre>
 
-<p id="case-1-m2-r1">M2 · repeat 1 · 764.5515839999998 ms · 2026-09-09T13:52:56.029Z</p>
-<pre><code>Fix page count calculation to include partial pages</code></pre>
+<p id="case-1-m3-r1">M3 · repeat 1 · 1482.570417 ms · 2026-09-09T15:49:24.828Z</p>
+<pre><code>Count partial pages in pagination helper
 
-<p id="case-1-m3-r1">M3 · repeat 1 · 1337.885625 ms · 2026-09-09T13:52:56.795Z</p>
-<pre><code>Count partial pages and cover pagination edge cases
-
-- Use ceiling division so incomplete final pages are included.
-- Add tests for partial, exact, and empty page counts.</code></pre>
-
-<p id="case-1-m2-r2">M2 · repeat 2 · 655.8459579999981 ms · 2026-09-09T13:53:29.319Z</p>
-<pre><code>Fix pageCount calculation to include final partial pages</code></pre>
-
-<p id="case-1-m3-r2">M3 · repeat 2 · 1572.3294169999936 ms · 2026-09-09T13:53:29.977Z</p>
-<pre><code>Count partial pages and cover pagination edge cases
-
-- Use ceiling division so incomplete final pages are included.
-- Add tests for partial, exact, and empty page counts.</code></pre>
-
-<p id="case-1-m1-r2">M1 · repeat 2 · 5838.165083 ms · 2026-09-09T13:53:31.554Z</p>
-<pre><code>Use Math.ceil in pageCount to include the final partial page
-
-* Update pageCount calculation to use Math.ceil instead of Math.floor
-  to ensure that a partial last page is correctly accounted for.
-* Add unit tests to verify pageCount behavior for various inputs.</code></pre>
-
-<p id="case-1-m3-r3">M3 · repeat 3 · 2507.879291999998 ms · 2026-09-09T13:54:01.381Z</p>
-<pre><code>Count partial pages so all records are addressable</code></pre>
-
-<p id="case-1-m1-r3">M1 · repeat 3 · 1384.6767499999987 ms · 2026-09-09T13:54:03.891Z</p>
-<pre><code>Fix pageCount to include the final partial page
-
-* Use Math.ceil instead of Math.floor so that remaining items are
-  accounted for in a new page.
-* Add unit tests to verify correct page calculation for various
-  totals.</code></pre>
-
-<p id="case-1-m2-r3">M2 · repeat 3 · 575.3476250000094 ms · 2026-09-09T13:54:05.277Z</p>
-<pre><code>Fix pageCount calculation to include final partial pages</code></pre>
-
+Add tests for full, partial, and empty page counts.</code></pre>
+<p><small>Issues: body-bullets.</small></p>
 </details>
-<details id="case-2"><summary>refactor</summary>
-<p><small>Summary limit: 72; ticket: none; breaking prefix required: no.</small></p>
-<p>Expect: Describe shared name formatting without claiming changed behavior.<br>Avoid: Performance improvement; New whitespace handling; Public API change</p>
-<details><summary>Original prompt</summary><pre><code>Generate a commit message for the git diff below.
-
-CRITICAL: Return ONLY the commit message. Do not include explanations, analysis, commentary, or additional text.
-
-Requirements:
-- Summary line MUST NOT exceed 72 characters
-- Use imperative mood and explain why, not just what changed
-- Do not use a type(scope): prefix
-- Omit brackets when no ticket or issue is provided
-- Start breaking changes with BREAKING: after the optional ticket
-- Only add a body for large or non-obvious changes
-- Bodies use bullets, one per moving part, stating what changed and why
-- Wrap body lines at 72 characters
-
-Output format: Just the commit message, nothing more.
-
-Previous commits in this feature branch (most recent first):
-```
-Keep author and user labels consistent
-```
-Ensure consistency with these commits. Adhere to the 72-character summary rule.
-
-Changes to commit:
-```
-diff --git a/src/labels.ts b/src/labels.ts
---- a/src/labels.ts
-+++ b/src/labels.ts
-@@ -1,7 +1,11 @@
--export function userLabel(first: string, last: string): string {
-+function fullName(first: string, last: string): string {
-     return `${first.trim()} ${last.trim()}`.trim();
- }
- 
-+export function userLabel(first: string, last: string): string {
-+    return fullName(first, last);
-+}
-+
- export function authorLabel(first: string, last: string): string {
--    return `${first.trim()} ${last.trim()}`.trim();
-+    return fullName(first, last);
- }
-
-```</code></pre></details>
-<p id="case-2-m2-r1">M2 · repeat 1 · 782.0100000000002 ms · 2026-09-09T13:52:58.136Z</p>
-<pre><code>Extract name formatting logic to helper function</code></pre>
-
-<p id="case-2-m3-r1">M3 · repeat 1 · 3092.958917 ms · 2026-09-09T13:52:58.920Z</p>
-<pre><code>Reuse name formatting to keep labels consistent</code></pre>
-
-<p id="case-2-m1-r1">M1 · repeat 1 · 1730.2146249999996 ms · 2026-09-09T13:53:02.015Z</p>
-<pre><code>Extract name formatting logic into a shared helper
-
-* Refactor name trimming into a private fullName function to reduce
-  duplication between userLabel and authorLabel.</code></pre>
-
-<p id="case-2-m3-r2">M3 · repeat 2 · 3461.7125830000004 ms · 2026-09-09T13:53:37.395Z</p>
-<pre><code>Reuse name formatting to keep labels consistent</code></pre>
-
-<p id="case-2-m1-r2">M1 · repeat 2 · 1602.6682080000028 ms · 2026-09-09T13:53:40.860Z</p>
-<pre><code>Refactor label generation to use a shared helper function
-
-* Extract fullName logic into a private function to ensure consistent
-  string trimming across different label types</code></pre>
-
-<p id="case-2-m2-r2">M2 · repeat 2 · 703.1707499999975 ms · 2026-09-09T13:53:42.465Z</p>
-<pre><code>Extract name formatting into helper function to prevent duplication</code></pre>
-
-<p id="case-2-m1-r3">M1 · repeat 3 · 1329.0835829999996 ms · 2026-09-09T13:54:05.855Z</p>
-<pre><code>Refactor label generation to use a shared helper function
-
-* Extract name formatting into a private `fullName` function to 
-  ensure consistent trimming and spacing across all label types.</code></pre>
-
-<p id="case-2-m2-r3">M2 · repeat 3 · 459.562791999997 ms · 2026-09-09T13:54:07.188Z</p>
-<pre><code>Refactor name formatting logic into shared function</code></pre>
-
-<p id="case-2-m3-r3">M3 · repeat 3 · 2936.729124999998 ms · 2026-09-09T13:54:07.650Z</p>
-<pre><code>Centralize name formatting to keep labels consistent</code></pre>
-
-</details>
-<details id="case-3"><summary>dependency</summary>
-<p><small>Summary limit: 50; ticket: none; breaking prefix required: no.</small></p>
-<p>Expect: Identify the @std/assert patch bump from 1.0.18 to 1.0.19; stay factual.<br>Avoid: Security fix; Specific upstream fixes; Runtime speedup; Lockfile update</p>
-<details><summary>Original prompt</summary><pre><code>Generate a commit message for the git diff below.
-
-CRITICAL: Return ONLY the commit message. Do not include explanations, analysis, commentary, or additional text.
-
-Requirements:
-- Summary line MUST NOT exceed 50 characters
-- Use imperative mood and explain why, not just what changed
-- Do not use a type(scope): prefix
-- Omit brackets when no ticket or issue is provided
-- Start breaking changes with BREAKING: after the optional ticket
-- Only add a body for large or non-obvious changes
-- Bodies use bullets, one per moving part, stating what changed and why
-- Wrap body lines at 72 characters
-
-Output format: Just the commit message, nothing more.
-
-Previous commits in this feature branch (most recent first):
-```
-Pin standard library test dependencies
-```
-Ensure consistency with these commits. Adhere to the 50-character summary rule.
-
-Changes to commit:
-```
-diff --git a/deno.json b/deno.json
---- a/deno.json
-+++ b/deno.json
-@@ -1,5 +1,5 @@
- {
-     &quot;imports&quot;: {
--        &quot;@std/assert&quot;: &quot;jsr:@std/assert@1.0.18&quot;
-+        &quot;@std/assert&quot;: &quot;jsr:@std/assert@1.0.19&quot;
-     }
- }
-
-```</code></pre></details>
-<p id="case-3-m3-r1">M3 · repeat 1 · 859.3613339999993 ms · 2026-09-09T13:53:03.748Z</p>
-<pre><code>Pin standard library test dependencies</code></pre>
-
-<p id="case-3-m1-r1">M1 · repeat 1 · 1003.1760410000006 ms · 2026-09-09T13:53:04.609Z</p>
-<pre><code>Update @std/assert to version 1.0.19</code></pre>
-
-<p id="case-3-m2-r1">M2 · repeat 1 · 434.30491600000096 ms · 2026-09-09T13:53:05.615Z</p>
-<pre><code>Update standard library assert dependency</code></pre>
-
-<p id="case-3-m1-r2">M1 · repeat 2 · 604.1552920000031 ms · 2026-09-09T13:53:43.171Z</p>
-<pre><code>Update @std/assert dependency to 1.0.19</code></pre>
-
-<p id="case-3-m2-r2">M2 · repeat 2 · 642.5866669999959 ms · 2026-09-09T13:53:43.779Z</p>
-<pre><code>Pin std assert test dependency</code></pre>
-
-<p id="case-3-m3-r2">M3 · repeat 2 · 1471.2991670000047 ms · 2026-09-09T13:53:44.423Z</p>
-<pre><code>Update standard library test dependency endpoint</code></pre>
-
-<p id="case-3-m2-r3">M2 · repeat 3 · 651.8626249999943 ms · 2026-09-09T13:54:10.590Z</p>
-<pre><code>Bump standard library test dependencies</code></pre>
-
-<p id="case-3-m3-r3">M3 · repeat 3 · 2925.8827919999894 ms · 2026-09-09T13:54:11.244Z</p>
-<pre><code>Update assert pin for dependency fixes</code></pre>
-
-<p id="case-3-m1-r3">M1 · repeat 3 · 741.929833000002 ms · 2026-09-09T13:54:14.172Z</p>
-<pre><code>Bump @std/assert to 1.0.19</code></pre>
-
-</details>
-<details id="case-4"><summary>breaking-api</summary>
+<details id="case-2"><summary>breaking-api</summary>
 <p><small>Summary limit: 72; ticket: none; breaking prefix required: yes.</small></p>
 <p>Expect: Start with BREAKING:; explain async return and callers needing await. Mention avoiding blocking file reads if adding rationale.<br>Avoid: Backward compatibility; Retained synchronous API; Changed settings format</p>
 <details><summary>Original prompt</summary><pre><code>Generate a commit message for the git diff below.
@@ -296,12 +114,17 @@ CRITICAL: Return ONLY the commit message. Do not include explanations, analysis,
 
 Requirements:
 - Summary line MUST NOT exceed 72 characters
-- Use imperative mood and explain why, not just what changed
+- Use imperative mood to state the actual change plainly
+- Use short, direct sentences and familiar words; keep meaningful technical names
+- Explain purpose only when the supplied diff or context supports it
+- Do not invent benefits or reasons
 - Do not use a type(scope): prefix
 - Omit brackets when no ticket or issue is provided
-- Start breaking changes with BREAKING: after the optional ticket
-- Only add a body for large or non-obvious changes
-- Bodies use bullets, one per moving part, stating what changed and why
+- A breaking change means existing callers must change their code to keep working
+- Start breaking changes with BREAKING: at the start of the summary, after the optional ticket and its following space
+- For breaking API changes, always add a body with concise guidance on how callers must change their code
+- Only add a body when the reader needs an explanation
+- Bodies use bullets, one per moving part; ground any reasons in the supplied diff or context
 - Wrap body lines at 72 characters
 
 Output format: Just the commit message, nothing more.
@@ -335,312 +158,20 @@ diff --git a/README.md b/README.md
 +This avoids blocking the event loop during file reads.
 
 ```</code></pre></details>
-<p id="case-4-m1-r1">M1 · repeat 1 · 8316.952667000001 ms · 2026-09-09T13:53:06.051Z</p>
-<pre><code>Make readSettings asynchronous to avoid blocking the event loop
-
-BREAKING: readSettings now returns a Promise instead of a string.
-
-* Change readSettings to use Deno.readTextFile instead of the
-  synchronous Deno.readTextFileSync to prevent blocking the event
-  loop.
-* Update documentation to reflect the breaking change in the return
-  type and usage.</code></pre>
-<p><small>Issues: breaking-prefix, body-bullets.</small></p>
-<p id="case-4-m2-r1">M2 · repeat 1 · 574.03125 ms · 2026-09-09T13:53:14.370Z</p>
-<pre><code>Make readSettings asynchronous to prevent event loop blocking</code></pre>
+<p id="case-2-m2-r1">M2 · repeat 1 · 992.0329169999995 ms · 2026-09-09T15:49:26.312Z</p>
+<pre><code>Make readSettings asynchronous</code></pre>
 <p><small>Issues: breaking-prefix.</small></p>
-<p id="case-4-m3-r1">M3 · repeat 1 · 2009.225666000002 ms · 2026-09-09T13:53:14.947Z</p>
-<pre><code>BREAKING: Read settings asynchronously to avoid blocking the event loop</code></pre>
+<p id="case-2-m3-r1">M3 · repeat 1 · 2817.466166 ms · 2026-09-09T15:49:27.305Z</p>
+<pre><code>BREAKING: Make readSettings asynchronous
 
-<p id="case-4-m2-r2">M2 · repeat 2 · 629.5686659999992 ms · 2026-09-09T13:53:45.898Z</p>
-<pre><code>Make settings file reader asynchronous to prevent blocking</code></pre>
-<p><small>Issues: breaking-prefix.</small></p>
-<p id="case-4-m3-r2">M3 · repeat 2 · 3368.068790999998 ms · 2026-09-09T13:53:46.530Z</p>
-<pre><code>BREAKING: Read settings asynchronously to avoid blocking the event loop
+- Await the Promise&lt;string&gt; returned by readSettings(path).
+- Replace synchronous reads with the asynchronous file read.</code></pre>
 
-- Return `Promise&lt;string&gt;` from `readSettings` using asynchronous file reads.
-- Document that callers must await results because synchronous reads are unsupported.</code></pre>
-<p><small>Issues: body-line-length.</small></p>
-<p id="case-4-m1-r2">M1 · repeat 2 · 2048.257375000001 ms · 2026-09-09T13:53:49.902Z</p>
-<pre><code>Make readSettings asynchronous to prevent blocking the event loop
+<p id="case-2-m1-r1">M1 · repeat 1 · 2402.7864580000005 ms · 2026-09-09T15:49:30.124Z</p>
+<pre><code>BREAKING: Make readSettings asynchronous
 
-BREAKING: Change readSettings return type from string to Promise&lt;string&gt;
-
-* Convert readSettings to an async function using Deno.readTextFile
-* Update documentation to reflect the breaking API change</code></pre>
-<p><small>Issues: breaking-prefix, body-bullets.</small></p>
-<p id="case-4-m3-r3">M3 · repeat 3 · 4629.105165999994 ms · 2026-09-09T13:54:14.917Z</p>
-<pre><code>BREAKING: Read settings asynchronously to avoid blocking
-
-- Return a promise so file reads do not block the event loop
-- Require callers to await `readSettings` because synchronous reads are removed</code></pre>
-<p><small>Issues: body-line-length.</small></p>
-<p id="case-4-m1-r3">M1 · repeat 3 · 1514.6091250000027 ms · 2026-09-09T13:54:19.550Z</p>
-<pre><code>Make readSettings asynchronous to prevent blocking the event loop
-
-BREAKING: readSettings now returns a Promise instead of a string.
-
-* Convert readSettings to an async function using Deno.readTextFile
-* Update documentation to reflect the new asynchronous API signature</code></pre>
-<p><small>Issues: breaking-prefix, body-bullets.</small></p>
-<p id="case-4-m2-r3">M2 · repeat 3 · 619.4542919999949 ms · 2026-09-09T13:54:21.067Z</p>
-<pre><code>Make readSettings asynchronous to prevent blocking the event loop</code></pre>
-<p><small>Issues: breaking-prefix.</small></p>
-</details>
-<details id="case-5"><summary>multi-file-feature</summary>
-<p><small>Summary limit: 72; ticket: none; breaking prefix required: no.</small></p>
-<p>Expect: Summarize CSV export for spreadsheet use. Body should cover CLI wiring, escaping, overwrite protection, and tests/docs as useful; avoid a file inventory.<br>Avoid: Streaming export; CSV import; Formula-injection protection; Tests were executed; Overwrite support</p>
-<details><summary>Original prompt</summary><pre><code>Generate a commit message for the git diff below.
-
-CRITICAL: Return ONLY the commit message. Do not include explanations, analysis, commentary, or additional text.
-
-Requirements:
-- Summary line MUST NOT exceed 72 characters
-- Use imperative mood and explain why, not just what changed
-- Do not use a type(scope): prefix
-- Omit brackets when no ticket or issue is provided
-- Start breaking changes with BREAKING: after the optional ticket
-- Only add a body for large or non-obvious changes
-- Bodies use bullets, one per moving part, stating what changed and why
-- Wrap body lines at 72 characters
-
-Output format: Just the commit message, nothing more.
-
-Previous commits in this feature branch (most recent first):
-```
-List saved contacts from local storage
-```
-Ensure consistency with these commits. Adhere to the 72-character summary rule.
-
-Changes to commit:
-```
-diff --git a/src/export/csv.ts b/src/export/csv.ts
-new file mode 100644
---- /dev/null
-+++ b/src/export/csv.ts
-@@ -0,0 +1,15 @@
-+export interface Contact {
-+    name: string;
-+    email: string;
-+}
-+
-+function cell(value: string): string {
-+    return /[&quot;,\r\n]/.test(value) ? `&quot;${value.replaceAll(&#39;&quot;&#39;, &#39;&quot;&quot;&#39;)}&quot;` : value;
-+}
-+
-+export function contactsCsv(contacts: Contact[]): string {
-+    return [
-+        &quot;name,email&quot;,
-+        ...contacts.map(({ name, email }) =&gt; `${cell(name)},${cell(email)}`),
-+    ].join(&quot;\r\n&quot;) + &quot;\r\n&quot;;
-+}
-diff --git a/src/commands/export.ts b/src/commands/export.ts
-new file mode 100644
---- /dev/null
-+++ b/src/commands/export.ts
-@@ -0,0 +1,7 @@
-+import { contactsCsv } from &quot;../export/csv.ts&quot;;
-+import { loadContacts } from &quot;../storage.ts&quot;;
-+
-+export async function exportContacts(path: string): Promise&lt;void&gt; {
-+    const contacts = await loadContacts();
-+    await Deno.writeTextFile(path, contactsCsv(contacts), { createNew: true });
-+}
-diff --git a/src/main.ts b/src/main.ts
---- a/src/main.ts
-+++ b/src/main.ts
-@@ -1,7 +1,10 @@
- import { listContacts } from &quot;./commands/list.ts&quot;;
-+import { exportContacts } from &quot;./commands/export.ts&quot;;
- 
- if (Deno.args[0] === &quot;list&quot;) {
-     await listContacts();
-+} else if (Deno.args[0] === &quot;export&quot; &amp;&amp; Deno.args[1]) {
-+    await exportContacts(Deno.args[1]);
- } else {
--    throw new Error(&quot;Usage: contacts list&quot;);
-+    throw new Error(&quot;Usage: contacts list | export &lt;new-file.csv&gt;&quot;);
- }
-diff --git a/src/export/csv_test.ts b/src/export/csv_test.ts
-new file mode 100644
---- /dev/null
-+++ b/src/export/csv_test.ts
-@@ -0,0 +1,20 @@
-+import { assertEquals } from &quot;@std/assert&quot;;
-+import { contactsCsv } from &quot;./csv.ts&quot;;
-+
-+Deno.test(&quot;CSV includes a header even without contacts&quot;, () =&gt; {
-+    assertEquals(contactsCsv([]), &quot;name,email\r\n&quot;);
-+});
-+
-+Deno.test(&quot;CSV escapes commas and quotes&quot;, () =&gt; {
-+    assertEquals(
-+        contactsCsv([{ name: &#39;Lee, &quot;Jo&quot;&#39;, email: &quot;jo@example.test&quot; }]),
-+        &#39;name,email\r\n&quot;Lee, &quot;&quot;Jo&quot;&quot;&quot;,jo@example.test\r\n&#39;,
-+    );
-+});
-+
-+Deno.test(&quot;CSV quotes embedded line breaks&quot;, () =&gt; {
-+    assertEquals(
-+        contactsCsv([{ name: &quot;Jo\nLee&quot;, email: &quot;jo@example.test&quot; }]),
-+        &#39;name,email\r\n&quot;Jo\nLee&quot;,jo@example.test\r\n&#39;,
-+    );
-+});
-diff --git a/README.md b/README.md
---- a/README.md
-+++ b/README.md
-@@ -1,3 +1,7 @@
- # Contacts
- 
- Run `contacts list` to display saved contacts.
-+
-+Run `contacts export contacts.csv` to export all saved names and emails
-+for use in spreadsheets. CSV fields escape commas, quotes, and line breaks.
-+The destination must not already exist; export refuses to overwrite it.
-
-```</code></pre></details>
-<p id="case-5-m2-r1">M2 · repeat 1 · 552.0202920000011 ms · 2026-09-09T13:53:16.958Z</p>
-<pre><code>Export saved contacts to a CSV file</code></pre>
-
-<p id="case-5-m3-r1">M3 · repeat 1 · 3019.872542000001 ms · 2026-09-09T13:53:17.513Z</p>
-<pre><code>Export saved contacts as CSV without overwriting files</code></pre>
-
-<p id="case-5-m1-r1">M1 · repeat 1 · 1716.472332999998 ms · 2026-09-09T13:53:20.535Z</p>
-<pre><code>Add export command to save contacts to a CSV file
-
-* Implement CSV serialization with proper escaping for commas, quotes,
-  and line breaks to ensure compatibility with spreadsheets.
-* Add export command to allow users to save contact data to a file.
-* Update CLI help text to include the new export command usage.</code></pre>
-
-<p id="case-5-m3-r2">M3 · repeat 2 · 1189.3481659999961 ms · 2026-09-09T13:53:51.952Z</p>
-<pre><code>Export contacts to a new CSV file for spreadsheet use
-
-- Add CSV serialization with escaping for commas, quotes, and line breaks
-- Add an export command that preserves existing files by refusing overwrites
-- Document the new export usage and destination behavior</code></pre>
-<p><small>Issues: body-line-length.</small></p>
-<p id="case-5-m1-r2">M1 · repeat 2 · 1546.2093329999989 ms · 2026-09-09T13:53:53.144Z</p>
-<pre><code>Add command to export contacts to a CSV file
-
-* Implement CSV generation with proper escaping for commas, quotes, and
-  newlines to ensure spreadsheet compatibility.
-* Add export command to load contacts from storage and write them to a
-  specified file path.
-* Update CLI entry point to support the new export subcommand and
-  provide updated usage instructions.
-* Add unit tests to verify CSV formatting and edge case escaping.</code></pre>
-
-<p id="case-5-m2-r2">M2 · repeat 2 · 441.3132079999996 ms · 2026-09-09T13:53:54.694Z</p>
-<pre><code>Export saved contacts to a CSV file</code></pre>
-
-<p id="case-5-m1-r3">M1 · repeat 3 · 2079.644165999998 ms · 2026-09-09T13:54:21.689Z</p>
-<pre><code>Add export command to save contacts as a CSV file
-
-* Implement CSV serialization to allow users to move data to spreadsheets
-* Add command line interface for the export operation
-* Add unit tests to ensure proper escaping of commas and quotes</code></pre>
-<p><small>Issues: body-line-length.</small></p>
-<p id="case-5-m2-r3">M2 · repeat 3 · 2522.7326249999896 ms · 2026-09-09T13:54:23.772Z</p>
-<pre><code>Export saved contacts to a CSV file</code></pre>
-
-<p id="case-5-m3-r3">M3 · repeat 3 · 5548.914791999996 ms · 2026-09-09T13:54:26.298Z</p>
-<pre><code>Export saved contacts as CSV for spreadsheet use
-
-- Add CSV serialization with escaping so names and emails remain valid.
-- Add an export command that refuses to overwrite files to prevent data loss.
-- Document the export usage and CSV formatting behavior.</code></pre>
-<p><small>Issues: body-line-length.</small></p>
-</details>
-<details id="case-6"><summary>issue-prefix</summary>
-<p><small>Summary limit: 50; ticket: SEARCH-42; breaking prefix required: no.</small></p>
-<p>Expect: Use [SEARCH-42] exactly once, not either history ticket, within 50 characters. Explain ignoring surrounding query whitespace; case folding already existed.<br>Avoid: New case-insensitive matching; Fuzzy matching; Changed result ordering</p>
-<details><summary>Original prompt</summary><pre><code>Generate a commit message for the git diff below.
-
-CRITICAL: Return ONLY the commit message. Do not include explanations, analysis, commentary, or additional text.
-
-Requirements:
-- Summary line MUST NOT exceed 50 characters
-- Use imperative mood and explain why, not just what changed
-- Do not use a type(scope): prefix
-- Omit brackets when no ticket or issue is provided
-- Start breaking changes with BREAKING: after the optional ticket
-- Only add a body for large or non-obvious changes
-- Bodies use bullets, one per moving part, stating what changed and why
-- Wrap body lines at 72 characters
-
-Output format: Just the commit message, nothing more.
-
-Previous commits in this feature branch (most recent first):
-```
-[OLD-19] Add case-insensitive search
-[LEGACY-8] Keep search results ordered
-```
-Ensure consistency with these commits. Adhere to the 50-character summary rule.
-
-Changes to commit:
-```
-diff --git a/src/search.ts b/src/search.ts
---- a/src/search.ts
-+++ b/src/search.ts
-@@ -1,3 +1,4 @@
- export function search(items: string[], query: string): string[] {
--    return items.filter((item) =&gt; item.toLowerCase().includes(query.toLowerCase()));
-+    const normalized = query.trim().toLowerCase();
-+    return items.filter((item) =&gt; item.toLowerCase().includes(normalized));
- }
-diff --git a/src/search_test.ts b/src/search_test.ts
-new file mode 100644
---- /dev/null
-+++ b/src/search_test.ts
-@@ -0,0 +1,6 @@
-+import { assertEquals } from &quot;@std/assert&quot;;
-+import { search } from &quot;./search.ts&quot;;
-+
-+Deno.test(&quot;search ignores surrounding query whitespace&quot;, () =&gt; {
-+    assertEquals(search([&quot;Alpha&quot;, &quot;Beta&quot;], &quot; alpha &quot;), [&quot;Alpha&quot;]);
-+});
-
-```
-
-Prefix the summary line with this ticket or issue key in square brackets: [SEARCH-42]
-Use this key, not tickets from previous commits. The 50-character limit includes this prefix and the following space.
-
-Example: [SEARCH-42] add the missing validation</code></pre></details>
-<p id="case-6-m3-r1">M3 · repeat 1 · 5260.172666000002 ms · 2026-09-09T13:53:22.254Z</p>
-<pre><code>[SEARCH-42] Trim queries for consistent matching</code></pre>
-
-<p id="case-6-m1-r1">M1 · repeat 1 · 1112.2825000000012 ms · 2026-09-09T13:53:27.518Z</p>
-<pre><code>[SEARCH-42] trim whitespace from search queries
-
-* Trim whitespace from the query to prevent accidental mismatches caused by leading or trailing spaces.</code></pre>
-<p><small>Issues: body-line-length.</small></p>
-<p id="case-6-m2-r1">M2 · repeat 1 · 683.5358330000017 ms · 2026-09-09T13:53:28.632Z</p>
-<pre><code>[SEARCH-42] Ignore surrounding query whitespace</code></pre>
-
-<p id="case-6-m1-r2">M1 · repeat 2 · 654.7827079999988 ms · 2026-09-09T13:53:55.137Z</p>
-<pre><code>[SEARCH-42] trim whitespace from search queries
-
-* Trim whitespace from the query to prevent unnecessary 
-  mismatches caused by leading or trailing spaces.</code></pre>
-
-<p id="case-6-m2-r2">M2 · repeat 2 · 706.0895000000019 ms · 2026-09-09T13:53:55.795Z</p>
-<pre><code>[SEARCH-42] Ignore surrounding whitespace in search query</code></pre>
-<p><small>Issues: summary-length (57 summary characters).</small></p>
-<p id="case-6-m3-r2">M3 · repeat 2 · 4873.852291000003 ms · 2026-09-09T13:53:56.504Z</p>
-<pre><code>[SEARCH-42] Avoid whitespace-sensitive queries</code></pre>
-
-<p id="case-6-m2-r3">M2 · repeat 3 · 613.9062089999934 ms · 2026-09-09T13:54:31.849Z</p>
-<pre><code>[SEARCH-42] Ignore surrounding query whitespace</code></pre>
-
-<p id="case-6-m3-r3">M3 · repeat 3 · 3956.66466699999 ms · 2026-09-09T13:54:32.466Z</p>
-<pre><code>[SEARCH-42] Trim query whitespace before matching</code></pre>
-
-<p id="case-6-m1-r3">M1 · repeat 3 · 576.4907499999972 ms · 2026-09-09T13:54:36.425Z</p>
-<pre><code>[SEARCH-42] trim whitespace from search query
-
-* Trim the search query to prevent leading or trailing
-  whitespace from causing unexpected search misses.</code></pre>
+* Change readSettings to return a Promise instead of a string
+* Callers must await the result of readSettings calls</code></pre>
 
 </details>
 </main></body></html>

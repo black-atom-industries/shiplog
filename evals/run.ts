@@ -5,8 +5,19 @@ import { PROVIDER_NAMES } from "../src/adapters.ts";
 import { fixtures } from "./fixtures.ts";
 import fileConfig from "./config.json" with { type: "json" };
 
-export function parseConfig(config: typeof fileConfig) {
-    if (!Number.isInteger(config.repetitions) || config.repetitions < 1 || !config.targets.length) {
+interface EvalConfig {
+    targets: typeof fileConfig.targets;
+    defaultTier: string;
+    tiers: Record<string, (typeof fileConfig.tiers)[keyof typeof fileConfig.tiers]>;
+}
+
+export function parseConfig(config: EvalConfig, tier = config.defaultTier) {
+    if (!Object.hasOwn(config.tiers, tier)) throw new Error(`Unknown benchmark tier: ${tier}`);
+    const selection = config.tiers[tier];
+    if (
+        !Number.isInteger(selection.repetitions) || selection.repetitions < 1 ||
+        !config.targets.length
+    ) {
         throw new Error("Benchmark needs targets and a positive integer repetition count.");
     }
     const targets = config.targets.map((target) => {
@@ -19,7 +30,33 @@ export function parseConfig(config: typeof fileConfig) {
     if (new Set(targets.map((target) => JSON.stringify(target))).size !== targets.length) {
         throw new Error("Duplicate benchmark provider/model pair.");
     }
-    return { targets, repetitions: config.repetitions };
+    for (const provider of selection.providers) {
+        if (!PROVIDER_NAMES.some((name) => name === provider)) {
+            throw new Error(`Unknown benchmark provider: ${provider}`);
+        }
+    }
+    if (
+        new Set(selection.providers).size !== selection.providers.length ||
+        new Set(selection.caseIds).size !== selection.caseIds.length
+    ) throw new Error("Duplicate benchmark provider or fixture selection.");
+    const selectedTargets = targets.filter((target) =>
+        selection.providers.includes(target.provider)
+    );
+    const selectedFixtures = selection.caseIds.map((id) => {
+        const fixture = fixtures.find((fixture) => fixture.id === id);
+        if (!fixture) throw new Error(`Unknown benchmark fixture: ${id}`);
+        return fixture;
+    });
+    if (!selectedTargets.length || !selectedFixtures.length) {
+        throw new Error("Benchmark plan is empty; select targets and fixtures.");
+    }
+    return {
+        tier,
+        targets: selectedTargets,
+        repetitions: selection.repetitions,
+        fixtures: selectedFixtures,
+        callCount: selectedTargets.length * selectedFixtures.length * selection.repetitions,
+    };
 }
 
 export function preflightCredentials(targets: readonly Target[], readEnv = Deno.env.get): string[] {
@@ -36,9 +73,14 @@ export async function saveReport(path: string | URL, benchmark: Benchmark): Prom
 }
 
 async function main(): Promise<void> {
-    const { targets, repetitions } = parseConfig(fileConfig);
+    if (Deno.args.length > 1) throw new Error("Expected at most one benchmark tier argument.");
+    const { tier, targets, repetitions, fixtures: selectedFixtures, callCount } = parseConfig(
+        fileConfig,
+        Deno.args[0],
+    );
+    console.log(`Tier: ${tier}; ${callCount} generation calls planned.`);
     const secrets = preflightCredentials(targets);
-    const cases = await Promise.all(fixtures.map(async (fixture) => {
+    const cases = await Promise.all(selectedFixtures.map(async (fixture) => {
         const diff = await Deno.readTextFile(
             new URL(`./fixtures/${fixture.id}.diff`, import.meta.url),
         );
@@ -63,6 +105,9 @@ async function main(): Promise<void> {
         results: [],
         provenance: [
             `Config: evals/config.json; Shiplog global/repo settings are not read.`,
+            `Tier: ${tier}; ${callCount} planned calls; ${cases.length}/${fixtures.length} fixtures: ${
+                cases.map((fixture) => fixture.id).join(", ")
+            }; ${targets.length}/${fileConfig.targets.length} configured targets; ${repetitions} repetition(s).`,
             `Git HEAD: ${
                 new TextDecoder().decode(head.stdout).trim()
             } (worktree may contain uncommitted benchmark changes).`,
@@ -77,9 +122,7 @@ async function main(): Promise<void> {
         persist: async () => {
             await saveReport(path, benchmark);
             console.log(
-                `${benchmark.results.length}/${
-                    cases.length * targets.length * repetitions
-                } attempts; ${benchmark.status}`,
+                `${benchmark.results.length}/${callCount} attempts; ${benchmark.status}`,
             );
         },
     });

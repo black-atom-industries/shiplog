@@ -5,5 +5,24 @@
         { "provider": "openrouter", "model": "openai/gpt-5.6-luna" },
         { "provider": "anthropic", "model": "claude-haiku-4-5" }
     ],
-    "repetitions": 3
+    "defaultTier": "quick",
+    "tiers": {
+        "quick": {
+            "providers": ["openrouter"],
+            "caseIds": ["small-fix", "breaking-api"],
+            "repetitions": 1
+        },
+        "full": {
+            "providers": ["openrouter", "anthropic"],
+            "caseIds": [
+                "small-fix",
+                "refactor",
+                "dependency",
+                "breaking-api",
+                "multi-file-feature",
+                "issue-prefix"
+            ],
+            "repetitions": 3
+        }
+    }
 }

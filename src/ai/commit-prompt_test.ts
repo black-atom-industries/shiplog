@@ -19,6 +19,39 @@ Deno.test("buildCommitPrompt - asks for plain changes and only supported purpose
     assertEquals(prompt.includes("stating what changed and why"), false);
 });
 
+Deno.test("buildCommitPrompt - defines breaking changes by required caller changes", () => {
+    const prompt = buildCommitPrompt({ diff: "some diff", commitHistory: "", summaryLength: 72 });
+    assertEquals(
+        prompt.includes(
+            "A breaking change means existing callers must change their code to keep working",
+        ),
+        true,
+    );
+});
+
+Deno.test("buildCommitPrompt - requires a literal summary warning before the change and caller migration guidance", () => {
+    for (const issueId of [undefined, "API-42"]) {
+        const prompt = buildCommitPrompt({
+            diff: "some diff",
+            commitHistory: "",
+            summaryLength: 72,
+            issueId,
+        });
+        assertEquals(
+            prompt.includes(
+                "Start breaking changes with BREAKING: at the start of the summary, after the optional ticket and its following space",
+            ),
+            true,
+        );
+        assertEquals(
+            prompt.includes(
+                "For breaking API changes, always add a body with concise guidance on how callers must change their code",
+            ),
+            true,
+        );
+    }
+});
+
 Deno.test("buildCommitPrompt - includes diff in output", () => {
     const prompt = buildCommitPrompt({
         diff: "diff --git a/file.ts",

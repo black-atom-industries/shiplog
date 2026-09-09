@@ -20,7 +20,9 @@ Requirements:
 - Do not invent benefits or reasons
 - Do not use a type(scope): prefix
 - Omit brackets when no ticket or issue is provided
-- Start breaking changes with BREAKING: after the optional ticket
+- A breaking change means existing callers must change their code to keep working
+- Start breaking changes with BREAKING: at the start of the summary, after the optional ticket and its following space
+- For breaking API changes, always add a body with concise guidance on how callers must change their code
 - Only add a body when the reader needs an explanation
 - Bodies use bullets, one per moving part; ground any reasons in the supplied diff or context
 - Wrap body lines at 72 characters

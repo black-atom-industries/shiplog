@@ -1,26 +1,33 @@
 # Commit-message benchmark
 
-A small opt-in **paid** benchmark using six synthetic diffs, never your staged files. Nothing is
-committed and Shiplog/global configuration is not changed.
+An opt-in **paid** benchmark with quick and full tiers using synthetic diffs, never your staged
+files. Nothing is committed and Shiplog/global configuration is not changed.
 
 ## Config and running
 
-Provider/model pairs and repetition count live only in **`evals/config.json`**, independent of
-Shiplog settings. The shipped list covers both supported API providers: three OpenRouter models and
-direct Anthropic Haiku (from the installed adapter catalog). Fixed fixture metadata lives in
-`fixtures.ts`. Edit the JSON to deliberately change a future run; tests verify coverage of
-`PROVIDER_NAMES` without copying the model list. Upstream OpenRouter hosts are not separate Shiplog
-API providers.
+Provider/model pairs, default tier, provider/case selection and repetition counts live only in
+**`evals/config.json`**, independent of Shiplog settings. Tiers select from the shared target list
+by provider and reference fixture IDs from `fixtures.ts`. Edit the JSON to deliberately change a
+future run. Tests verify full-tier coverage of `PROVIDER_NAMES` without copying the model list.
+Upstream OpenRouter hosts are not separate Shiplog API providers.
 
 ```sh
-# Set OPENROUTER_API_KEY and ANTHROPIC_API_KEY in your environment, never in files.
-deno task eval:commits
+# Set OPENROUTER_API_KEY in your environment, never in files.
+deno task eval:commits       # default: quick
+deno task eval:commits quick # same paid smoke test
+
+# Full also requires ANTHROPIC_API_KEY and explicit spending authorization.
+deno task eval:commits full
 ```
 
-**The current config plans 72 generate calls (6 cases × 4 provider/model targets × 3 repetitions).**
-All required credentials are checked before any call or report overwrite. A missing credential
-aborts the entire run rather than skipping a provider. The report records the targets and results of
-its own run; these may differ from the current config.
+**Quick plans 6 generate calls:** small-fix and breaking-api × 3 OpenRouter targets × 1 repetition.
+**Full plans 72 calls:** all 6 fixtures × all 4 targets (including direct Anthropic Haiku) × 3
+repetitions. Quick does not require an Anthropic key; full is blocked without it.
+
+The runner prints the planned call count before generation. Unknown tiers, fixture IDs, providers
+and empty plans are rejected before any call or report overwrite. Only selected targets need
+credentials; a missing required key aborts rather than skipping a provider. The report records its
+tier, coverage, targets and results, which may differ from the current config.
 
 Calls are sequential, looping repetition → case → target, with target order rotated by case index
 plus repetition index. Three repetitions balance a three-target roster; they do not fully balance
@@ -51,10 +58,13 @@ In Pi, trust the project to discover `.agents/skills/benchmark/SKILL.md`, then i
 **`/skill:benchmark`** to analyze the saved report without API calls. Request an update to write the
 TL;DR: one easy recommendation sentence and up to three ranked models, each with a short pro, con
 and typical time. A tiny note covers sample size and limitations; links lead to the evidence. The
-whole review stays below 150 words. The agent reviews all captured inputs/outputs; correctness and
-required information come before editing burden, then speed. This is provisional agent judgment, not
-a numerical quality score or an automatic runner judge. Unrun providers are not ranked; incomplete
-evidence can mean no clear winner.
+whole review stays below 150 words. Quick is a smoke test, not evidence of a general model winner:
+review the two cases without ranking models across untested work. It does not cover dependency,
+refactor, CSV or ticket handling, and a changed-prompt run does not prove causation. The agent
+reviews all captured inputs/outputs; correctness and required information come before editing
+burden, then speed. This is provisional agent judgment, not a numerical quality score or an
+automatic runner judge. Unrun providers are not ranked; incomplete evidence can mean no clear
+winner.
 
 Every fresh render (including partial progress) resets the top section to **Not reviewed** so a new
 run cannot inherit a stale recommendation. Authorized review edits replace only the region between
@@ -99,6 +109,6 @@ for fixture in evals/fixtures/*.diff; do git apply --numstat "$fixture"; done
 
 Offline tests cover scheduling, statistics, raw/sanitized checks, HTML escaping/reporting,
 same-model provider separation, sequential persistence, stop-on-error, secret redaction, provider
-coverage, credential preflight, review delimiters/escaping and stale-review reset. Regular tests/CI
-never invoke the live entry point. `git apply --numstat` checks synthetic patch syntax without
-applying anything.
+full-provider coverage, quick/full selection and call counts, selected credential preflight, invalid
+plans, review delimiters/escaping and stale-review reset. Regular tests/CI never invoke the live
+entry point. `git apply --numstat` checks synthetic patch syntax without applying anything.

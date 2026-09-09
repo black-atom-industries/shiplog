@@ -1,11 +1,33 @@
 import { assertEquals, assertStringIncludes, assertThrows } from "@std/assert";
-import type { Benchmark } from "./commits.ts";
+import { type Benchmark, schedule } from "./commits.ts";
+import { fixtures } from "./fixtures.ts";
 import { parseConfig, preflightCredentials, saveReport } from "./run.ts";
 import { ANTHROPIC_MODELS, PROVIDER_NAMES } from "../src/adapters.ts";
 import fileConfig from "./config.json" with { type: "json" };
 
+Deno.test("parseConfig defaults to the configured six-call quick plan", () => {
+    const plan = parseConfig(fileConfig);
+    const selection = fileConfig.tiers.quick;
+    assertEquals(plan.tier, fileConfig.defaultTier);
+    assertEquals(plan.tier, "quick");
+    assertEquals(plan.repetitions, selection.repetitions);
+    assertEquals(
+        plan.targets,
+        fileConfig.targets.filter((target) => selection.providers.includes(target.provider)),
+    );
+    assertEquals(plan.fixtures.map((fixture) => fixture.id), selection.caseIds);
+    assertEquals(
+        schedule({ ...plan, caseIds: plan.fixtures.map((fixture) => fixture.id) }).length,
+        6,
+    );
+    assertEquals(plan.callCount, 6);
+});
+
 Deno.test("shipped config covers every Shiplog API provider and uses catalogued direct Anthropic models", () => {
-    const { targets } = parseConfig(fileConfig);
+    const { targets, callCount, fixtures: selectedFixtures } = parseConfig(fileConfig, "full");
+    assertEquals(callCount, 72);
+    assertEquals(targets, fileConfig.targets);
+    assertEquals(selectedFixtures, fixtures);
     assertEquals(
         [...new Set(targets.map((target) => target.provider))].sort(),
         [...PROVIDER_NAMES].sort(),
@@ -17,11 +39,12 @@ Deno.test("shipped config covers every Shiplog API provider and uses catalogued 
 
 Deno.test("preflightCredentials requires every target provider before generation and does not reveal keys", () => {
     const targets = parseConfig({
+        ...fileConfig,
+        defaultTier: "full",
         targets: [{ provider: "anthropic", model: "a" }, {
             provider: "openrouter",
             model: "a",
         }],
-        repetitions: 1,
     }).targets;
     assertEquals(preflightCredentials(targets, (name) => `${name}-synthetic-secret`), [
         "ANTHROPIC_API_KEY-synthetic-secret",
@@ -45,16 +68,85 @@ Deno.test("preflightCredentials requires every target provider before generation
 
 Deno.test("parseConfig accepts provider/model pairs independent of Shiplog settings and rejects invalid spending plans", () => {
     const config = {
-        targets: [{ provider: "anthropic", model: "synthetic-model" }],
-        repetitions: 3,
+        ...fileConfig,
+        targets: [{ provider: fileConfig.tiers.quick.providers[0], model: "synthetic-model" }],
     };
-    assertEquals(parseConfig(config), config);
+    assertEquals(parseConfig(config).targets, config.targets);
     assertThrows(() =>
         parseConfig({ ...config, targets: [{ provider: "unsupported", model: "synthetic" }] })
     );
-    assertThrows(() => parseConfig({ ...config, repetitions: 0 }));
+    assertThrows(() =>
+        parseConfig({ ...config, tiers: { quick: { ...config.tiers.quick, repetitions: 0 } } })
+    );
     assertThrows(() => parseConfig({ ...config, targets: [] }));
     assertThrows(() => parseConfig({ ...config, targets: [config.targets[0], config.targets[0]] }));
+});
+
+Deno.test("parseConfig rejects unknown tiers, fixtures, providers and empty or duplicate selections", () => {
+    const selection = fileConfig.tiers.quick;
+    const select = (changes: Partial<typeof selection>) =>
+        parseConfig({
+            ...fileConfig,
+            tiers: { quick: { ...selection, ...changes } },
+        });
+    assertThrows(() => parseConfig(fileConfig, "unknown"), Error, "Unknown benchmark tier");
+    assertThrows(() => parseConfig(fileConfig, "toString"), Error, "Unknown benchmark tier");
+    assertThrows(() => select({ caseIds: ["unknown"] }), Error, "fixture");
+    assertThrows(() => select({ providers: ["unknown"] }), Error, "provider");
+    assertThrows(() => select({ caseIds: [] }), Error, "empty");
+    assertThrows(() => select({ providers: [] }), Error, "empty");
+    assertThrows(
+        () => select({ caseIds: [selection.caseIds[0], selection.caseIds[0]] }),
+        Error,
+        "Duplicate",
+    );
+    assertThrows(
+        () => select({ providers: [selection.providers[0], selection.providers[0]] }),
+        Error,
+        "Duplicate",
+    );
+    assertThrows(() => select({ repetitions: 1.5 }));
+    assertThrows(
+        () =>
+            parseConfig({
+                ...fileConfig,
+                targets: fileConfig.targets.filter((target) =>
+                    !selection.providers.includes(target.provider)
+                ),
+            }),
+        Error,
+        "empty",
+    );
+});
+
+Deno.test("preflightCredentials quick needs only selected credentials while full requires Anthropic", () => {
+    const selectedNames = fileConfig.tiers.quick.providers.map((provider) =>
+        `${provider.toUpperCase()}_API_KEY`
+    );
+    const requestedNames: string[] = [];
+    const readEnv = (name: string) => {
+        requestedNames.push(name);
+        return selectedNames.includes(name) ? "synthetic-secret" : undefined;
+    };
+    assertEquals(
+        preflightCredentials(parseConfig(fileConfig).targets, readEnv),
+        selectedNames.map(() => "synthetic-secret"),
+    );
+    assertEquals(requestedNames, selectedNames);
+    assertThrows(
+        () => preflightCredentials(parseConfig(fileConfig, "full").targets, readEnv),
+        Error,
+        "ANTHROPIC_API_KEY is required; no requests made.",
+    );
+});
+
+Deno.test("parseConfig follows configured case order rather than fixture catalog order", () => {
+    const caseIds = [...fileConfig.tiers.quick.caseIds].reverse();
+    const plan = parseConfig({
+        ...fileConfig,
+        tiers: { quick: { ...fileConfig.tiers.quick, caseIds } },
+    });
+    assertEquals(plan.fixtures.map((fixture) => fixture.id), caseIds);
 });
 
 Deno.test("saveReport overwrites one HTML file with partial progress and no sidecars", async () => {
