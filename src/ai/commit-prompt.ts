@@ -45,6 +45,7 @@ ${diff}
         prompt += `
 
 Prefix the summary line with this ticket or issue key in square brackets: [${issueId}]
+Use this key, not tickets from previous commits. The ${summaryLength}-character limit includes this prefix and the following space.
 
 Example: [${issueId}] add the missing validation`;
     }

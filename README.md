@@ -140,8 +140,20 @@ issue_pattern = "(\\w+-\\d+)"
 issue_prefix = ""
 ```
 
-When `issue_pattern` matches the current branch name, the extracted issue ID is prepended to commit
-messages in square brackets. Set `use_lazygit = false` to disable the lazygit staging prompt.
+Without `issue_pattern`, Shiplog detects Jira-style keys in the current branch automatically: a
+letter-leading alphanumeric project key, a hyphen, and digits, bounded by the branch ends or `/`,
+`_`, or `-`. For example, `websdk-216-fix-defaults` resolves to `WEBSDK-216`.
+
+An explicit `issue_pattern` overrides detection, even when it does not match (an empty pattern also
+disables detection). Matches are uppercased unless a nonempty `issue_prefix` and first capture group
+are present, in which case the prefix is joined to that group as configured. `issue_prefix` alone
+does not alter automatic detection.
+
+AI-generated messages, including raw output and regenerations, start with the resolved issue exactly
+once in square brackets. The summary length includes this prefix. Commit history does not determine
+the issue. The guided builder uses it as a default; manual edits remain authoritative.
+
+Set `use_lazygit = false` to disable the lazygit staging prompt.
 
 ## Development
 

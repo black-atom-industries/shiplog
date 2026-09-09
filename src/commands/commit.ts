@@ -4,23 +4,13 @@ import { loadConfig } from "../config/loader.ts";
 import type { MergedConfig } from "../config/schema.ts";
 import { getCommitHistory, getCurrentBranch, getStagedDiff, isGitRepo } from "../git/diff.ts";
 import { commit, forcePush, push } from "../git/operations.ts";
+import { extractIssueId } from "../git/issue.ts";
 import { generate } from "../ai/client.ts";
 import { buildCommitPrompt } from "../ai/commit-prompt.ts";
 import { sanitizeCommitMessage } from "../ai/sanitize.ts";
 import { confirmForcePush, editMessage, selectCommitAction, selectModel } from "../ui/prompts.ts";
 import { askUserToOpenLazygit } from "../ui/lazygit.ts";
 import { runGuidedCommit } from "../ui/commit-builder.ts";
-
-function extractIssueId(branch: string, pattern?: string, prefix?: string): string | undefined {
-    if (!pattern) return undefined;
-    const match = branch.match(new RegExp(pattern, "i"));
-    if (!match) return undefined;
-
-    if (prefix && match[1]) {
-        return `${prefix}${match[1]}`;
-    }
-    return match[0].toUpperCase();
-}
 
 async function ensureStagedChanges(useLazygit: boolean): Promise<void> {
     const diff = await getStagedDiff();
@@ -55,7 +45,7 @@ async function generateCommitMessage(
         getCommitHistory(config.historyCount),
     ]);
 
-    const issueId = extractIssueId(branch, config.issuePattern, config.issuePrefix);
+    const issueId = extractIssueId(branch, config);
 
     const prompt = buildCommitPrompt({
         diff,
@@ -68,7 +58,7 @@ async function generateCommitMessage(
         console.error(`Generating with ${colors.cyan(model)}...`);
     }
     const message = await generate(prompt, model, config.provider);
-    return sanitizeCommitMessage(message);
+    return sanitizeCommitMessage(message, issueId);
 }
 
 function displayMessage(message: string, model: string): void {
@@ -142,11 +132,7 @@ export const commitCommand = new Command()
 
         if (!options.smart) {
             await ensureStagedChanges(config.useLazygit);
-            const issueId = extractIssueId(
-                await getCurrentBranch(),
-                config.issuePattern,
-                config.issuePrefix,
-            );
+            const issueId = extractIssueId(await getCurrentBranch(), config);
             await runGuidedCommit(issueId);
             await handlePush(!!options.push, !!options.force);
             return;

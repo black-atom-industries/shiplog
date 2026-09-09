@@ -51,3 +51,18 @@ Deno.test("buildCommitPrompt - uses the ticket-prefixed format", () => {
     assertEquals(prompt.includes("type(scope):"), true);
     assertEquals(prompt.includes("conventional commit"), false);
 });
+
+Deno.test("buildCommitPrompt - counts the prefix in the limit and rejects history tickets", () => {
+    const prompt = buildCommitPrompt({
+        diff: "some diff",
+        commitHistory: "[OTHER-42] previous change",
+        summaryLength: 72,
+        issueId: "WEBSDK-216",
+    });
+    assertEquals(
+        prompt.includes("72-character limit includes this prefix and the following space"),
+        true,
+    );
+    assertEquals(prompt.includes("Use this key, not tickets from previous commits"), true);
+    assertEquals(prompt.includes("[WEBSDK-216]"), true);
+});
