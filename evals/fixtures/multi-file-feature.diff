@@ -1,0 +1,83 @@
+diff --git a/src/export/csv.ts b/src/export/csv.ts
+new file mode 100644
+--- /dev/null
++++ b/src/export/csv.ts
+@@ -0,0 +1,15 @@
++export interface Contact {
++    name: string;
++    email: string;
++}
++
++function cell(value: string): string {
++    return /[",\r\n]/.test(value) ? `"${value.replaceAll('"', '""')}"` : value;
++}
++
++export function contactsCsv(contacts: Contact[]): string {
++    return [
++        "name,email",
++        ...contacts.map(({ name, email }) => `${cell(name)},${cell(email)}`),
++    ].join("\r\n") + "\r\n";
++}
+diff --git a/src/commands/export.ts b/src/commands/export.ts
+new file mode 100644
+--- /dev/null
++++ b/src/commands/export.ts
+@@ -0,0 +1,7 @@
++import { contactsCsv } from "../export/csv.ts";
++import { loadContacts } from "../storage.ts";
++
++export async function exportContacts(path: string): Promise<void> {
++    const contacts = await loadContacts();
++    await Deno.writeTextFile(path, contactsCsv(contacts), { createNew: true });
++}
+diff --git a/src/main.ts b/src/main.ts
+--- a/src/main.ts
++++ b/src/main.ts
+@@ -1,7 +1,10 @@
+ import { listContacts } from "./commands/list.ts";
++import { exportContacts } from "./commands/export.ts";
+ 
+ if (Deno.args[0] === "list") {
+     await listContacts();
++} else if (Deno.args[0] === "export" && Deno.args[1]) {
++    await exportContacts(Deno.args[1]);
+ } else {
+-    throw new Error("Usage: contacts list");
++    throw new Error("Usage: contacts list | export <new-file.csv>");
+ }
+diff --git a/src/export/csv_test.ts b/src/export/csv_test.ts
+new file mode 100644
+--- /dev/null
++++ b/src/export/csv_test.ts
+@@ -0,0 +1,20 @@
++import { assertEquals } from "@std/assert";
++import { contactsCsv } from "./csv.ts";
++
++Deno.test("CSV includes a header even without contacts", () => {
++    assertEquals(contactsCsv([]), "name,email\r\n");
++});
++
++Deno.test("CSV escapes commas and quotes", () => {
++    assertEquals(
++        contactsCsv([{ name: 'Lee, "Jo"', email: "jo@example.test" }]),
++        'name,email\r\n"Lee, ""Jo""",jo@example.test\r\n',
++    );
++});
++
++Deno.test("CSV quotes embedded line breaks", () => {
++    assertEquals(
++        contactsCsv([{ name: "Jo\nLee", email: "jo@example.test" }]),
++        'name,email\r\n"Jo\nLee",jo@example.test\r\n',
++    );
++});
+diff --git a/README.md b/README.md
+--- a/README.md
++++ b/README.md
+@@ -1,3 +1,7 @@
+ # Contacts
+ 
+ Run `contacts list` to display saved contacts.
++
++Run `contacts export contacts.csv` to export all saved names and emails
++for use in spreadsheets. CSV fields escape commas, quotes, and line breaks.
++The destination must not already exist; export refuses to overwrite it.

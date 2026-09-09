@@ -1,0 +1,17 @@
+diff --git a/src/labels.ts b/src/labels.ts
+--- a/src/labels.ts
++++ b/src/labels.ts
+@@ -1,7 +1,11 @@
+-export function userLabel(first: string, last: string): string {
++function fullName(first: string, last: string): string {
+     return `${first.trim()} ${last.trim()}`.trim();
+ }
+ 
++export function userLabel(first: string, last: string): string {
++    return fullName(first, last);
++}
++
+ export function authorLabel(first: string, last: string): string {
+-    return `${first.trim()} ${last.trim()}`.trim();
++    return fullName(first, last);
+ }

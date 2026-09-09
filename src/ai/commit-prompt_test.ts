@@ -1,6 +1,24 @@
 import { assertEquals } from "@std/assert";
 import { buildCommitPrompt } from "./commit-prompt.ts";
 
+Deno.test("buildCommitPrompt - asks for plain changes and only supported purposes", () => {
+    const prompt = buildCommitPrompt({ diff: "some diff", commitHistory: "", summaryLength: 72 });
+    for (
+        const guidance of [
+            "Use imperative mood to state the actual change plainly",
+            "Use short, direct sentences and familiar words; keep meaningful technical names",
+            "Explain purpose only when the supplied diff or context supports it",
+            "Do not invent benefits or reasons",
+            "Only add a body when the reader needs an explanation",
+            "Bodies use bullets, one per moving part; ground any reasons in the supplied diff or context",
+            "Return ONLY the commit message",
+            "Wrap body lines at 72 characters",
+        ]
+    ) assertEquals(prompt.includes(guidance), true, guidance);
+    assertEquals(prompt.includes("explain why, not just what changed"), false);
+    assertEquals(prompt.includes("stating what changed and why"), false);
+});
+
 Deno.test("buildCommitPrompt - includes diff in output", () => {
     const prompt = buildCommitPrompt({
         diff: "diff --git a/file.ts",

@@ -11,6 +11,7 @@
         "schema": "deno run --allow-read --allow-env --allow-write scripts/generate-schema.ts",
         "schema:check": "deno run --allow-read --allow-env scripts/generate-schema.ts --check",
         "test": "deno test --allow-read --allow-env --allow-write",
+        "eval:commits": "deno run --allow-read --allow-env --allow-net --allow-write=evals/results.html --allow-run=git evals/run.ts",
         "check": "deno check .",
         "checks": "./scripts/checks.sh",
         "lint": "deno lint",

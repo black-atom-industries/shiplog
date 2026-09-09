@@ -14,12 +14,15 @@ CRITICAL: Return ONLY the commit message. Do not include explanations, analysis,
 
 Requirements:
 - Summary line MUST NOT exceed ${summaryLength} characters
-- Use imperative mood and explain why, not just what changed
+- Use imperative mood to state the actual change plainly
+- Use short, direct sentences and familiar words; keep meaningful technical names
+- Explain purpose only when the supplied diff or context supports it
+- Do not invent benefits or reasons
 - Do not use a type(scope): prefix
 - Omit brackets when no ticket or issue is provided
 - Start breaking changes with BREAKING: after the optional ticket
-- Only add a body for large or non-obvious changes
-- Bodies use bullets, one per moving part, stating what changed and why
+- Only add a body when the reader needs an explanation
+- Bodies use bullets, one per moving part; ground any reasons in the supplied diff or context
 - Wrap body lines at 72 characters
 
 Output format: Just the commit message, nothing more.`;

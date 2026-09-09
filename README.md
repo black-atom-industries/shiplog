@@ -164,6 +164,9 @@ deno task lint     # Lint
 deno task fmt      # Format
 ```
 
+For the opt-in, paid commit-message benchmark, see [evals/README.md](evals/README.md)
+(`deno task eval:commits`). It is not run by tests or CI.
+
 ## Stack
 
 - [Deno 2.x](https://deno.com/) — runtime
