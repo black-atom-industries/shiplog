@@ -3,7 +3,8 @@ import { GlobalConfigSchema, MergedConfigSchema, RepoConfigSchema } from "./sche
 
 Deno.test("GlobalConfigSchema - parses empty object with defaults", () => {
     const result = GlobalConfigSchema.parse({});
-    assertEquals(result.provider, "openrouter");
+    assertEquals(result.provider, "claude-code");
+    assertEquals(result["claude-code"], undefined);
     assertEquals(result.openrouter, undefined);
     assertEquals(result.anthropic, undefined);
     assertEquals(result.summaryLength, 72);

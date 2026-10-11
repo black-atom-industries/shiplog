@@ -8,8 +8,8 @@ files. Nothing is committed and Shiplog/global configuration is not changed.
 Provider/model pairs, default tier, provider/case selection and repetition counts live only in
 **`evals/config.json`**, independent of Shiplog settings. Tiers select from the shared target list
 by provider and reference fixture IDs from `fixtures.ts`. Edit the JSON to deliberately change a
-future run. Tests verify full-tier coverage of `PROVIDER_NAMES` without copying the model list.
-Upstream OpenRouter hosts are not separate Shiplog API providers.
+future run. Tests verify full-tier coverage of the API providers in `PROVIDER_NAMES` without copying
+the model list. Upstream OpenRouter hosts are not separate Shiplog API providers.
 
 ```sh
 # Set OPENROUTER_API_KEY in your environment, never in files.

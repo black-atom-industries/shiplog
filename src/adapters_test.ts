@@ -6,6 +6,10 @@ import {
     PROVIDER_NAMES,
 } from "./adapters.ts";
 
+Deno.test("PROVIDER_NAMES includes claude-code", () => {
+    assertEquals(PROVIDER_NAMES.includes("claude-code"), true);
+});
+
 Deno.test("PROVIDER_NAMES includes anthropic", () => {
     assertEquals(PROVIDER_NAMES.includes("anthropic"), true);
 });

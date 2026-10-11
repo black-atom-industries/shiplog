@@ -23,10 +23,11 @@ src/
 
 ## Key Design Decisions
 
-- **TanStack AI** as the abstraction layer over providers — not raw SDK calls
+- **TanStack AI** as the abstraction layer over the API providers — not raw SDK calls; `claude-code`
+  shells out to the Claude Code CLI to bill the Claude subscription
 - **Zod v4** for config schema validation (global `~/.config/black-atom/shiplog/config.toml` +
   per-repo `.shiplog.toml`)
-- **Provider pattern** — designed for multi-provider support, currently Anthropic-only
+- **Provider pattern** — `claude-code` (default), `anthropic`, `openrouter`
 - Config merges: global defaults → global config → repo config
 
 ## Documentation

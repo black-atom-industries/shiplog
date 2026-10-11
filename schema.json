@@ -3,12 +3,32 @@
     "type": "object",
     "properties": {
         "provider": {
-            "default": "openrouter",
+            "default": "claude-code",
             "type": "string",
             "enum": [
+                "claude-code",
                 "anthropic",
                 "openrouter"
             ]
+        },
+        "claude-code": {
+            "type": "object",
+            "properties": {
+                "model": {
+                    "type": "string"
+                },
+                "models": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": [
+                "model",
+                "models"
+            ],
+            "additionalProperties": false
         },
         "openrouter": {
             "type": "object",

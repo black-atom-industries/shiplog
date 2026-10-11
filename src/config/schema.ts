@@ -7,9 +7,8 @@ const ProviderModelsSchema = z.object({
 });
 
 export const GlobalConfigSchema = z.object({
-    provider: z.enum(PROVIDER_NAMES as unknown as ["anthropic", "openrouter"]).default(
-        "openrouter",
-    ),
+    provider: z.enum(PROVIDER_NAMES).default("claude-code"),
+    "claude-code": ProviderModelsSchema.optional(),
     openrouter: ProviderModelsSchema.optional(),
     anthropic: ProviderModelsSchema.optional(),
     summaryLength: z.number().positive().default(72),

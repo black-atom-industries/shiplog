@@ -10,7 +10,7 @@ export { ANTHROPIC_MODELS };
 
 type OpenRouterModel = Parameters<typeof openRouterText>[0];
 
-export const PROVIDER_NAMES = ["anthropic", "openrouter"] as const;
+export const PROVIDER_NAMES = ["claude-code", "anthropic", "openrouter"] as const;
 
 export type ProviderName = (typeof PROVIDER_NAMES)[number];
 
@@ -25,7 +25,7 @@ export const OPENROUTER_DEFAULT_MODELS = [
 ] as const;
 
 export function createAdapter(
-    provider: ProviderName,
+    provider: Exclude<ProviderName, "claude-code">,
     model: ModelName,
     options: { anthropicApiKey?: string; openRouterApiKey?: string } = {},
 ) {

@@ -30,7 +30,7 @@ Deno.test("shipped config covers every Shiplog API provider and uses catalogued 
     assertEquals(selectedFixtures, fixtures);
     assertEquals(
         [...new Set(targets.map((target) => target.provider))].sort(),
-        [...PROVIDER_NAMES].sort(),
+        PROVIDER_NAMES.filter((name) => name !== "claude-code").sort(),
     );
     for (const target of targets.filter((target) => target.provider === "anthropic")) {
         assertEquals(ANTHROPIC_MODELS.some((model) => model === target.model), true);

@@ -4,8 +4,9 @@ AI-powered git CLI — generates commit messages and branch names via LLM.
 
 ## Install
 
-Requires [Deno 2.x](https://deno.com/) and an API key for your chosen LLM provider:
+Requires [Deno 2.x](https://deno.com/) and credentials for your chosen LLM provider:
 
+- Claude Code: the `claude` CLI on `PATH`, logged in with a Claude subscription
 - Anthropic: `ANTHROPIC_API_KEY`
 - OpenRouter: `OPENROUTER_API_KEY`
 
@@ -42,16 +43,18 @@ suggestion for you to review, edit, or regenerate before applying.
 
 Currently supported providers:
 
-| Provider     | Models                                                                         |
-| ------------ | ------------------------------------------------------------------------------ |
-| `anthropic`  | `claude-opus-4-6`, `claude-sonnet-4-5`, `claude-haiku-4-6`                     |
-| `openrouter` | `google/gemma-3-27b-it`, `google/gemma-3-12b-it`, `nvidia/nemotron-nano-9b-v2` |
+| Provider      | Models                                                                         |
+| ------------- | ------------------------------------------------------------------------------ |
+| `claude-code` | `claude-haiku-5-5`, `claude-sonnet-5-5`                                        |
+| `anthropic`   | `claude-opus-4-6`, `claude-sonnet-4-5`, `claude-haiku-4-6`                     |
+| `openrouter`  | `google/gemma-3-27b-it`, `google/gemma-3-12b-it`, `nvidia/nemotron-nano-9b-v2` |
 
-The default model is `claude-haiku-4-6` (fast and cheap). OpenRouter users get free model options
-and auto-routing by default. You can switch models interactively during a `--smart` session, or set
-a different default in your config.
+The default is `claude-haiku-5-5` through `claude-code`, which runs `claude -p` and bills your
+Claude subscription instead of an API key. OpenRouter users get free model options and auto-routing
+by default. You can switch models interactively during a `--smart` session, or set a different
+default in your config.
 
-Requires the provider's API key as an environment variable:
+The API providers need their key as an environment variable:
 
 - Anthropic: `ANTHROPIC_API_KEY`
 - OpenRouter: `OPENROUTER_API_KEY`

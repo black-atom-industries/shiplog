@@ -29,6 +29,10 @@ async function readTomlFile(path: string): Promise<Record<string, unknown> | nul
 }
 
 const DEFAULT_PROVIDER_MODELS: Record<string, { model: string; models: string[] }> = {
+    "claude-code": {
+        model: "claude-haiku-5-5",
+        models: ["claude-haiku-5-5", "claude-sonnet-5-5"],
+    },
     openrouter: {
         model: "google/gemma-4-26b-a4b-it",
         models: [
@@ -48,9 +52,7 @@ export async function loadConfig(): Promise<MergedConfig> {
     const globalConfig = GlobalConfigSchema.parse(globalRaw ?? {});
 
     const providerKey = globalConfig.provider;
-    const providerConfig = providerKey === "openrouter"
-        ? globalConfig.openrouter
-        : globalConfig.anthropic;
+    const providerConfig = globalConfig[providerKey];
     const defaults = DEFAULT_PROVIDER_MODELS[providerKey];
 
     const resolved = {

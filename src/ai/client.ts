@@ -1,11 +1,16 @@
 import { chat } from "@tanstack/ai";
 import { createAdapter, type ModelName, type ProviderName } from "../adapters.ts";
+import { generateWithClaudeCode } from "./claude-code.ts";
 
 export async function generate(
     prompt: string,
     model: ModelName,
     provider: ProviderName,
 ): Promise<string> {
+    if (provider === "claude-code") {
+        return await generateWithClaudeCode(prompt, model);
+    }
+
     const adapter = createAdapter(provider, model);
 
     const stream = chat({
