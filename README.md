@@ -43,11 +43,11 @@ suggestion for you to review, edit, or regenerate before applying.
 
 Currently supported providers:
 
-| Provider      | Models                                                                         |
-| ------------- | ------------------------------------------------------------------------------ |
-| `claude-code` | `claude-haiku-5-5`, `claude-sonnet-5-5`                                        |
-| `anthropic`   | `claude-opus-4-6`, `claude-sonnet-4-5`, `claude-haiku-4-6`                     |
-| `openrouter`  | `google/gemma-3-27b-it`, `google/gemma-3-12b-it`, `nvidia/nemotron-nano-9b-v2` |
+| Provider      | Models                                                                   |
+| ------------- | ------------------------------------------------------------------------ |
+| `claude-code` | `claude-haiku-5-5`, `claude-sonnet-5-5`                                  |
+| `anthropic`   | `claude-haiku-4-6`, `claude-sonnet-4-5`                                  |
+| `openrouter`  | `google/gemma-4-26b-a4b-it`, `google/gemma-4-31b-it`, `claude-haiku-4-6` |
 
 The default is `claude-haiku-5-5` through `claude-code`, which runs `claude -p` and bills your
 Claude subscription instead of an API key. OpenRouter users get free model options and auto-routing
@@ -114,21 +114,24 @@ shiplog config --show
 ### Global (`~/.config/black-atom/shiplog/config.toml`)
 
 ```toml
-provider = "anthropic"
-model = "claude-haiku-4-6"
-models = ["claude-opus-4-6", "claude-sonnet-4-5", "claude-haiku-4-6"]
+provider = "claude-code"
 summary_length = 72
 history_count = 10
+
+[claude-code]
+model = "claude-haiku-5-5"
+models = ["claude-haiku-5-5", "claude-sonnet-5-5"]
 ```
 
-Or with OpenRouter:
+Each provider has its own `[<provider>]` section; `provider` picks the active one. A missing section
+falls back to the defaults. With OpenRouter:
 
 ```toml
 provider = "openrouter"
-model = "google/gemma-3-27b-it"
-models = ["google/gemma-3-27b-it", "google/gemma-3-12b-it", "nvidia/nemotron-nano-9b-v2"]
-summary_length = 72
-history_count = 10
+
+[openrouter]
+model = "google/gemma-4-26b-a4b-it"
+models = ["google/gemma-4-26b-a4b-it", "google/gemma-4-31b-it", "claude-haiku-4-6"]
 ```
 
 OpenRouter gives you access to 300+ models through a single API key. The defaults above are cheap,
