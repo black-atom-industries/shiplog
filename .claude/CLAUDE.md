@@ -9,26 +9,10 @@ suggestions. It's a re-invention of the `repo` bash script from
 [dots](https://github.com/nikbrunner/dots) (`common/.local/bin/repo`), rebuilt as a proper CLI with
 typed config, provider abstraction, and extensibility.
 
-## Architecture
-
-```
-src/
-  commands/     → CLI command definitions (Cliffy)
-  ai/           → LLM client + prompt templates
-  providers/    → Provider adapters (currently: Anthropic via TanStack AI)
-  config/       → TOML config loading + Zod schema validation
-  git/          → Git operations (diff, exec, operations)
-  ui/           → Interactive prompts (Cliffy)
-```
-
 ## Key Design Decisions
 
 - **TanStack AI** as the abstraction layer over the API providers — not raw SDK calls; `claude-code`
   shells out to the Claude Code CLI to bill the Claude subscription
-- **Zod v4** for config schema validation (global `~/.config/black-atom/shiplog/config.toml` +
-  per-repo `.shiplog.toml`)
-- **Provider pattern** — `claude-code` (default), `anthropic`, `openrouter`
-- Config merges: global defaults → global config → repo config
 
 ## Documentation
 
